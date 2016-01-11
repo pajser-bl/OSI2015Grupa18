@@ -24,12 +24,12 @@ import java.util.logging.Logger;
 
 public class Dan implements java.io.Serializable{
     private String _datum;
-    private int _sum;
+    private double _sum;
     private ArrayList<Racun> _listaRacuna;
     protected Statistika statistika;
 
     public String getDatum() {return _datum;}
-    public int getSum() {return _sum;}
+    public double getSum() {return _sum;}
     
     public void setDatum(String datum){_datum=datum;}
     public void setSum(int sum){_sum=sum;}
