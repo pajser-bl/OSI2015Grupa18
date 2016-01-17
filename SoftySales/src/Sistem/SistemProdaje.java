@@ -266,7 +266,6 @@ public class SistemProdaje {
                 default:
             }
         }
-        cIn.close();
     }
 
     public static void pregledStatistike() {
@@ -573,8 +572,6 @@ public class SistemProdaje {
                 default:
             }
         }
-        cIn.close();
-        
     }
 
     public static void upravljanjeProizvodima() {
