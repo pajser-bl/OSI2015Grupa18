@@ -22,100 +22,101 @@ import java.util.logging.Logger;
  *
  * @author pajser
  */
-public class KasaServer{
+public class KasaServer {
+
     private String _cashier;
-    
-    
-    
 
     private Scanner cIn;
 //    podaci o radnicima i administratoru
-    private static HashMap<String,String> _listaRadnika;
+    private static HashMap<String, String> _listaRadnika;
     private static ArrayList<String> _listaKupaca;
-    private static ArrayList<HashMap<Proizvod,Integer>> _listaZahtjeva;
-    public String getCashier(){return _cashier;}
-    
-    public KasaServer(){
-        cIn=new Scanner(System.in);
-        
+    private static ArrayList<HashMap<Proizvod, Integer>> _listaZahtjeva;
+
+    public String getCashier() {
+        return _cashier;
+    }
+
+    public KasaServer() {
+        cIn = new Scanner(System.in);
+
 //        _listaKupaca=new ArrayList();
 //        SistemProdaje.saveKupci(_listaKupaca);
 //        _listaKupaca=SistemProdaje.readKupci();
-        
-        _listaZahtjeva=new ArrayList();
-        _listaRadnika=SistemProdaje.read();
-        _listaKupaca=SistemProdaje.readKupci();
+        _listaZahtjeva = new ArrayList();
+        _listaRadnika = SistemProdaje.read();
+        _listaKupaca = SistemProdaje.readKupci();
         //SistemProdaje.save(_listaRadnika);
 //        inicijalizacija fajlova
         SistemProdaje.fajlSistem();
 //        inicijalizacija threda
-        KasaThread kasaThread=new KasaThread();
+        KasaThread kasaThread = new KasaThread();
         kasaThread.start();
 //        login i rad servera
-        System.out.println("Server online, enter your credentials.");
-        boolean loginCheck=false;
-        boolean adminCheck=false;
-        while(!loginCheck){
-            System.out.printf("Username: ");
-            String username=cIn.nextLine();
-            System.out.printf("Password:");
-            String password=cIn.nextLine();
-            String loginInfo=username+"#"+password;
-            switch(SistemProdaje.loginCheck(loginInfo,_listaRadnika)){
-                case "WUSER":{
-                    System.out.println("Nepostojeci korisnik.");
+        System.out.println("Aplikacija uspjesno pokrenuta.\nUnesite korisnicke podatke...");
+        boolean loginCheck = false;
+        boolean adminCheck = false;
+        while (!loginCheck) {
+            System.out.printf("Korisnicko ime: ");
+            String username = cIn.nextLine();
+            System.out.printf("Sifra:");
+            String password = cIn.nextLine();
+            switch (SistemProdaje.loginCheck(username, password, _listaRadnika)) {
+                case -1: {
+                    System.out.println("Pogresni podaci.");
                     break;
                 }
-                case "WPASS":{
-                    System.out.println("Pogresna sifra.");
+                case 1: {
+                    _cashier = username;
+                    System.out.println("Dobrodosli " + _cashier + ".");
+                    loginCheck = true;
                     break;
                 }
-                case "WORKER":{
-                    _cashier=username;
-                    System.out.println("Dobrodosli "+_cashier+".");
-                    loginCheck=true;
+                case 2: {
+                    _cashier = username;
+                    System.out.println("Dobrodosli " + _cashier + ".");
+                    adminCheck = true;
+                    loginCheck = true;
                     break;
                 }
-                case "ADMIN":{
-                    adminCheck=true;
-                    loginCheck=true;
-                    break;
-                }
-                case "EXIT":{
+                case 0: {
                     System.exit(0);
                 }
             }
         }
-        if(adminCheck){
+        if (adminCheck) {
             SistemProdaje.adminMeni(_listaRadnika);
-        }
-        else{
-            SistemProdaje.radnikMeni(_cashier,_listaKupaca,_listaZahtjeva);
+        } else {
+            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva);
         }
     }
-    public static void main(String args[]){
+
+    public static void main(String args[]) {
         System.out.println("KasaServer is starting...");
         KasaServer kasaServer = new KasaServer();
         System.out.println("Server is shuting down...");
         System.exit(0);
     }
-    public static class KasaThread extends Thread{
-        public boolean work=true;
+
+    public static class KasaThread extends Thread {
+
+        public boolean work = true;
         //    serverski podaci
-        public static final int SERVER_PORT=9001;
+        public static final int SERVER_PORT = 9001;
         private ServerSocket sSocket;
-        public KasaThread(){
+
+        public KasaThread() {
             try {
-                sSocket=new ServerSocket(SERVER_PORT);
+                sSocket = new ServerSocket(SERVER_PORT);
             } catch (IOException ex) {
                 Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
         @Override
-        public void run(){
+        public void run() {
             try {
-                while(work){
-                    Socket sock=sSocket.accept();
+                while (work) {
+                    Socket sock = sSocket.accept();
                     KasaSistemThread kasaSistemThread = new KasaSistemThread(sock);
                 }
                 sSocket.close();
@@ -124,22 +125,26 @@ public class KasaServer{
             }
         }
     }
-    public static class KasaSistemThread extends Thread{
+
+    public static class KasaSistemThread extends Thread {
+
         ObjectInputStream oInS;
-        HashMap<Proizvod,Integer>zahtjev;
-        public KasaSistemThread(Socket sock){
+        HashMap<Proizvod, Integer> zahtjev;
+
+        public KasaSistemThread(Socket sock) {
             try {
-                oInS=new ObjectInputStream(sock.getInputStream());
+                oInS = new ObjectInputStream(sock.getInputStream());
             } catch (IOException ex) {
                 Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             start();
         }
+
         @Override
-        public void run(){
+        public void run() {
             try {
-                if((zahtjev=(HashMap<Proizvod,Integer>)oInS.readObject())!=null){
+                if ((zahtjev = (HashMap<Proizvod, Integer>) oInS.readObject()) != null) {
                     KasaServer._listaZahtjeva.add(zahtjev);
                     oInS.close();
                 }
@@ -147,6 +152,6 @@ public class KasaServer{
                 Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
 }
