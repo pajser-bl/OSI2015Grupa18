@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
@@ -42,15 +44,43 @@ public class SistemProdaje {
     public static final File GODINE = new File("godine");
     public static final File IZVJESTAJI = new File("izvjestaji");
     
+    public static String sha256(String password) {
+        
+        String _pwd = "";
+        
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            StringBuffer hexString = new StringBuffer();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+
+            _pwd = hexString.toString();
+        } catch (Exception ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return _pwd;
+    }
+    
     public static Integer loginCheck(String username, String password, HashMap<String, String> listaKorisnika) {
         if (username.equals("EXIT".toLowerCase()) || password.equals("EXIT".toLowerCase())) {
             return 0;
         }
         if (listaKorisnika.containsKey(username)) {
-            if (listaKorisnika.get(username).equals(password) && username.equals("admin")) {
+            
+            String _pwd = sha256(password);
+            
+            if (listaKorisnika.get(username).equals(_pwd) && username.equals("admin")) {
                 return 2;
             }
-            if (listaKorisnika.get(username).equals(password)) {
+            if (listaKorisnika.get(username).equals(_pwd)) {
                 return 1;
             }
             return -1;
@@ -82,7 +112,7 @@ public class SistemProdaje {
             oIn.close();
             fIn.close();
             if (!listaRadnika.containsKey("admin")) {
-                listaRadnika.put("admin", "1111");
+                listaRadnika.put("admin", sha256("1111"));
             }
             return listaRadnika;
         } catch (FileNotFoundException ex) {
@@ -131,7 +161,7 @@ public class SistemProdaje {
     public static void adminMeni(HashMap<String, String> lista) {
         boolean end = false;
         Scanner cIn = new Scanner(System.in);
-        String opcije;
+        int opcije;
         while (!end) {
             cls();
             System.out.println("-------------------");
@@ -143,27 +173,30 @@ public class SistemProdaje {
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
             
-            opcije = cIn.nextLine();
+            opcije = Integer.parseInt(cIn.nextLine());
+            
             switch (opcije) {
-                case "1": {
+                case 1: {
                     cls();
                     upravljanjeNalozima(lista);
                     break;
                 }
-                case "2": {
+                case 2: {
                     cls();
                     pregledStatistike();
                     break;
                 }
-                case "3": {
+                case 3: {
 //                    PRAZNO
                     break;
                 }
-                case "0": {
+                case 0: {
                     end = true;
                     break;
                 }
                 default:
+                    System.out.println("Nepostojeca opcija.");
+                    cIn.nextLine();
             }
         }
         cIn.close();
@@ -212,7 +245,7 @@ public class SistemProdaje {
                     } else {
                         System.out.printf("Password: ");
                         String pass = cIn.nextLine();
-                        lista.put(user, pass);
+                        lista.put(user, sha256(pass));
                         System.out.println("Korisnik uspjesno dodan.");
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
@@ -231,7 +264,7 @@ public class SistemProdaje {
                         user = cIn.nextLine();
                         System.out.printf("Novi Password: ");
                         pass = cIn.nextLine();
-                        lista.put(user, pass);
+                        lista.put(user, sha256(pass));
                         System.out.printf("Modifikacija zavrsena.");
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();

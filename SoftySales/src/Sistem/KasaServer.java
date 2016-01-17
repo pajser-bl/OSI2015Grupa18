@@ -67,13 +67,12 @@ public class KasaServer {
                 }
                 case 1: {
                     _cashier = username;
-                    System.out.println("Dobrodosli " + _cashier + ".");
+                    System.out.println("Dobrodosli " + username + ".");
                     loginCheck = true;
                     break;
                 }
                 case 2: {
-                    _cashier = username;
-                    System.out.println("Dobrodosli " + _cashier + ".");
+                    System.out.println("Dobrodosli " + username + ".");
                     adminCheck = true;
                     loginCheck = true;
                     break;
