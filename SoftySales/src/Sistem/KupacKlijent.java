@@ -101,8 +101,6 @@ public class KupacKlijent extends Thread {
 //            prima inventar
             System.out.println("Inicijalizacija inventara...");
             inventar=(HashMap<Proizvod,Integer>)in.readObject();
-//            salje ime
-            out.writeObject(_ime);
 //          MENI+salje zahtjev
             kupacMeni(inventar);
             
@@ -201,15 +199,17 @@ public class KupacKlijent extends Thread {
                         if(inventar.containsKey(proizvod)){
                             System.out.printf("Unesite kolicinu: ");
                             Integer kolicina=cIn.nextInt();
-                            korpa.put(proizvod,kolicina);
-                            System.out.println("Proizvod dodan u korpu.");
+                            if(inventar.get(proizvod)<kolicina){
+                                System.out.println("Na stanju nema toliko artikala.");
+                            }else{
+                                korpa.put(proizvod,kolicina);
+                                System.out.println("Proizvod dodan u korpu.");
+                            }
                         }else
                             System.out.println("Proizvod ne postoji.");
-                            
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
                     }
-                        
                     break;
                 }
                 
@@ -228,11 +228,12 @@ public class KupacKlijent extends Thread {
                         System.out.println("Pritisnite ENTER za kraj.");
                         cIn.nextLine();
                         end=true;
+                    }else{
+                        System.out.println("Zahtjev nije poslan.");
+                        System.out.println("Pritisnite ENTER za kraj.");
+                        cIn.nextLine();
+                        end=true;
                     }
-                    System.out.println("Zahtjev nije poslan.");
-                    System.out.println("Pritisnite ENTER za kraj.");
-                    cIn.nextLine();
-                    end=true;
                 } catch (IOException | ClassNotFoundException ex) {
                     Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
                 }

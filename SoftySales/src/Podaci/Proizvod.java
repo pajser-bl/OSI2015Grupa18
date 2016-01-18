@@ -48,7 +48,8 @@ public class Proizvod implements java.io.Serializable {
     }
 
     public boolean equals(Proizvod proizvod) {
-        return _sifra == proizvod.getSifra();
+        return _sifra==proizvod.getSifra()&&_naziv.equals(proizvod.getNaziv())&&_cijena==proizvod.getCijena();
+        
     }
 
     //print za racun
