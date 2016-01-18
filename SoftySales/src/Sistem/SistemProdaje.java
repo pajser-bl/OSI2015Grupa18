@@ -656,6 +656,7 @@ public class SistemProdaje {
         boolean end = false;
         while (!end) {
             cls();
+            inventar=readInventar();
             System.out.println("-------------------");
             System.out.println("1. Prikaz proizvoda.");
             System.out.println("2. Dodavanje novih proizvoda.");
@@ -712,7 +713,7 @@ public class SistemProdaje {
                             System.out.printf(" x" + inventar.get(p) + "\n");
                         }
                         System.out.println("-------------------");
-                        System.out.printf("Proizvod cije stanje se mjenja[SIFRA]: ");
+                        System.out.printf("Proizvod cije stanje se mjenja[NAZIV]: ");
                         String ime = cIn.nextLine();
                         Proizvod proizvod = null;
                         for (Proizvod p : inventar.keySet()) {
@@ -747,12 +748,12 @@ public class SistemProdaje {
                             System.out.printf(" x" + inventar.get(p) + "\n");
                         }
                         System.out.println("-------------------");
-                        System.out.printf("Proizvod koji zelite da uklonite: ");
+                        System.out.printf("Proizvod koji zelite da uklonite[NAZIV]: ");
                         String ime = cIn.nextLine();
                         Proizvod proizvod = null;
                         for (Proizvod p : inventar.keySet()) {
-                            if (p.getNaziv().equals(ime));
-                            proizvod = p;
+                            if (p.getNaziv().equals(ime))
+                                proizvod = p;
                         }
                         if (inventar.containsKey(proizvod)) {
                             inventar.remove(proizvod);

@@ -21,11 +21,15 @@ import java.util.logging.Logger;
 public class KupacKlijent extends Thread {
 
     public static final int PORT = 9001;
+    public static final int IPORT = 9002;
     private InetAddress iAddress;
     private BufferedReader in;
     private PrintWriter out;
+    private ObjectInputStream oInS;
+    private ObjectOutputStream oOutS;
     private Scanner cIn;
     private Socket sock;
+    private Socket objectSock;
     private boolean logInCheck;
     private boolean logOnCheck;
     private String _ime;
@@ -43,8 +47,11 @@ public class KupacKlijent extends Thread {
             this.korpa=new HashMap();
             this.iAddress = InetAddress.getByName("127.0.0.1");
             this.sock = new Socket(iAddress, PORT);
+            //this.objectSock=new Socket(iAddress,IPORT);
             this.in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
             this.out = new PrintWriter((new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()))), true);
+//            this.oInS=new ObjectInputStream(objectSock.getInputStream());
+//            this.oOutS=new ObjectOutputStream(objectSock.getOutputStream());
             this.cIn = new Scanner(System.in);
         } catch (UnknownHostException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,25 +89,41 @@ public class KupacKlijent extends Thread {
                     if (logInCheck()) {
                         logInCheck = true;
                         logOnCheck = true;
+                        System.out.println("Autorizacija uspjesna.");
+                        System.out.println("Dobrodosli " + _ime + " .");
                     }
                 } else if (cIn.nextLine().toLowerCase().equals("ne")) {
                     out.println("0");
                     logOnCheck = true;
                 }
             }
-            System.out.println("Autorizacija uspjesna.");
-            System.out.println("Dobrodosli " + _ime + " .");
-//            in.close();
-//            out.close();
-            ObjectInputStream oIn=new ObjectInputStream(sock.getInputStream());
-            ObjectOutputStream oOut=new ObjectOutputStream(sock.getOutputStream());
-            inventar=(HashMap<Proizvod,Integer>)oIn.readObject();
             
-//        Meni
-            kupacMeni(inventar,oOut,oIn);
-            Racun racun=(Racun)oIn.readObject();
+            out.close();
+            in.close();
+            System.out.println("Autorizacija uspjesna.");
+            this.objectSock=new Socket(iAddress,IPORT);
+            this.oInS=new ObjectInputStream(objectSock.getInputStream());
+            this.oOutS=new ObjectOutputStream(objectSock.getOutputStream());
+            
+//            prima inventar
+            System.out.println("Inicijalizacija inventara...");
+            inventar=(HashMap<Proizvod,Integer>)oInS.readObject();
+//            salje ime
+            oOutS.writeObject(_ime);
+//          MENI+salje zahtjev
+            kupacMeni(inventar,oOutS,oInS);
+            
+//            PRIMA RACUN
+            Racun racun=(Racun)oInS.readObject();
             System.out.println("Vas racun:");
             racun.print();
+            System.out.println("Pritisnite ENTER za kraj.");
+            cIn.nextLine();
+//            KRAJ zatvori sve konekcije
+            
+            cIn.close();
+            oInS.close();
+            oOutS.close();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
         }

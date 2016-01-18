@@ -53,6 +53,8 @@ public class KasaServer {
 //      inicijalizacija threda
         KasaThread kasaThread = new KasaThread();
         kasaThread.start();
+        InventarSocketClass iSC=new InventarSocketClass();
+        iSC.start();
 //        login i rad servera
         System.out.println("Aplikacija uspjesno pokrenuta.\nUnesite korisnicke podatke...");
         boolean loginCheck = false;
@@ -163,27 +165,85 @@ public class KasaServer {
                         out.println("0");
                     }
                 }
-                System.out.printf("AAaasdasd");
-                //in.close();
-                //out.close();
-                this.oInS = new ObjectInputStream(sock.getInputStream());
-                this.oOutS=new ObjectOutputStream(sock.getOutputStream());
-                oOutS.writeObject(_inventar);
-                System.out.printf("AAa");
-                if ((zahtjev = (HashMap<Proizvod, Integer>) oInS.readObject()) != null) {
-                    Racun racun=new Racun(getCashier(),name);
-                    for(Proizvod p:zahtjev.keySet()){
-                        racun.add(p, zahtjev.get(p));
-                        KasaServer._listaZahtjeva.add(racun);
-                    }
-                    oInS.close();
-                    oOutS.writeObject(racun);
-                    oOutS.close();
-                }
-            } catch (IOException | ClassNotFoundException ex) {
+                out.close();
+                in.close();
+            } catch (IOException ex) {
                 Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
     }
+    public class InventarSocketClass extends Thread{
+        public static final int ISCPORT=9002;
+        private boolean work=true;
+        private ServerSocket ss;
+        
+        public InventarSocketClass(){
+            try {
+                this.ss=new ServerSocket(ISCPORT);
+                
+            } catch (IOException ex) {
+                Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        @Override
+        public void run(){
+            try {
+                while(work){
+                    Socket sock=ss.accept();
+                    new InventarSocketThread(sock).start();
+                    System.out.println("SSSS");
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
+        }
+        
+        public class InventarSocketThread extends Thread{
+            ObjectInputStream oInS;
+            ObjectOutputStream oOutS;
+            
+            public InventarSocketThread(Socket sock){
+                try {
+                    this.oInS = new ObjectInputStream(sock.getInputStream());
+                    this.oOutS=new ObjectOutputStream(sock.getOutputStream());
+                } catch (IOException ex) {
+                    Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            @Override
+            public void run(){
+                try {
+//                salje inventar
+                    oOutS.writeObject(_inventar);
+                    HashMap<Proizvod, Integer> zahtjev;
+//                    prima ime
+                    String name=(String)oInS.readObject();
+//                    prima zahtjev
+                    zahtjev = (HashMap<Proizvod, Integer>) oInS.readObject();
+                    Racun racun=new Racun(getCashier(),name);
+                    for(Proizvod p:zahtjev.keySet()){
+                        racun.add(p, zahtjev.get(p));
+                        int temp=_inventar.get(p);
+                        _inventar.remove(p);
+                        _inventar.put(p, temp-zahtjev.get(p));
+                        KasaServer._listaZahtjeva.add(racun);
+                    }
+//                    salje racun
+                    oOutS.writeObject(racun);
+                    oInS.close();
+                    oOutS.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                
+            }
+        }
+    }
+     
+    
 }
