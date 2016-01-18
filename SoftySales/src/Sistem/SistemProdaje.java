@@ -716,12 +716,13 @@ public class SistemProdaje {
                         String ime = cIn.nextLine();
                         Proizvod proizvod = null;
                         for (Proizvod p : inventar.keySet()) {
-                            if (p.getNaziv().equals(ime));
-                            proizvod = p;
+                            if (p.getNaziv().equals(ime))
+                                proizvod = p;
                         }
                         if (inventar.containsKey(proizvod)) {
                             System.out.printf("Novo stanje proizvoda: ");
                             Integer stanje = cIn.nextInt();
+                            inventar.remove(proizvod);
                             inventar.put(proizvod, stanje);
                             saveInventar(inventar);
                             System.out.println("Stanje uspjesno promjenjeno.");

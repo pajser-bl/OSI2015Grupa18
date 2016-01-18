@@ -60,7 +60,8 @@ public class KupacKlijent extends Thread {
         try {
             while (!logInCheck) {
                 System.out.printf("Da li ste privilegovani kupac?[Da/Ne]:");
-                if (cIn.nextLine().toLowerCase().equals("da")) {
+                String option=cIn.nextLine();
+                if (option.toLowerCase().equals("da")) {
                     while(!logOnCheck){
                         System.out.println("Unesite vase ime");
                         String ime=cIn.nextLine();
@@ -78,12 +79,13 @@ public class KupacKlijent extends Thread {
                             logInCheck=true;
                         }
                     }
-                } else if (cIn.nextLine().toLowerCase().equals("ne")) {
+                } else if (option.toLowerCase().equals("ne")) {
                     logInCheck = true;
                     _ime="no_name";
                     out.writeObject("EXIT");
                     String t=(String)in.readObject();
-                }
+                }else
+                    System.out.println("Nepostojeci odgovor.");
             }
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
@@ -194,7 +196,7 @@ public class KupacKlijent extends Thread {
                         for(Proizvod p:inventar.keySet()){
                             if(p.getNaziv().equals(naziv)){
                                 proizvod=p;
-                                }
+                            }
                         }
                         if(inventar.containsKey(proizvod)){
                             System.out.printf("Unesite kolicinu: ");
@@ -203,6 +205,9 @@ public class KupacKlijent extends Thread {
                                 System.out.println("Na stanju nema toliko artikala.");
                             }else{
                                 korpa.put(proizvod,kolicina);
+                                int temp=inventar.get(proizvod)-kolicina;
+                                inventar.remove(proizvod);
+                                inventar.put(proizvod,temp);
                                 System.out.println("Proizvod dodan u korpu.");
                             }
                         }else
