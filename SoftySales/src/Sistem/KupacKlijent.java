@@ -23,15 +23,12 @@ public class KupacKlijent extends Thread {
     public static final int PORT = 9001;
     public static final int IPORT = 9002;
     private InetAddress iAddress;
-    private BufferedReader in;
-    private PrintWriter out;
-    private ObjectInputStream oInS;
-    private ObjectOutputStream oOutS;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
     private Scanner cIn;
     private Socket sock;
     private Socket objectSock;
     private boolean logInCheck;
-    private boolean logOnCheck;
     private String _ime;
     private HashMap<Proizvod,Integer>inventar;
     private HashMap<Proizvod,Integer>korpa;
@@ -42,16 +39,14 @@ public class KupacKlijent extends Thread {
 
     public KupacKlijent() {
         try {
+            
             this.logInCheck = false;
-            this.logOnCheck = false;
             this.korpa=new HashMap();
             this.iAddress = InetAddress.getByName("127.0.0.1");
             this.sock = new Socket(iAddress, PORT);
-            //this.objectSock=new Socket(iAddress,IPORT);
-            this.in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            this.out = new PrintWriter((new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()))), true);
-//            this.oInS=new ObjectInputStream(objectSock.getInputStream());
-//            this.oOutS=new ObjectOutputStream(objectSock.getOutputStream());
+            
+            this.out=new ObjectOutputStream(sock.getOutputStream());
+            this.in=new ObjectInputStream(sock.getInputStream());
             this.cIn = new Scanner(System.in);
         } catch (UnknownHostException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,8 +60,8 @@ public class KupacKlijent extends Thread {
             String ime;
             System.out.printf("Unesite vase ime: ");
             ime = cIn.nextLine();
-            out.println(ime);
-            String rec = in.readLine();
+            out.writeObject(ime);
+            String rec = (String)in.readObject();
             if (rec.equals("1")) {
                 _ime = ime;
                 return true;
@@ -74,7 +69,7 @@ public class KupacKlijent extends Thread {
                 System.out.println("Neodgovarajuci podatci.");
             }
             return false;
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
@@ -83,47 +78,36 @@ public class KupacKlijent extends Thread {
     @Override
     public void run() {
         try {
-            while (!logOnCheck) {
+            while (!logInCheck) {
                 System.out.printf("Da li ste privilegovani kupac?[Da/Ne]:");
                 if (cIn.nextLine().toLowerCase().equals("da")) {
                     if (logInCheck()) {
+                        out.writeObject("TRUE");
                         logInCheck = true;
-                        logOnCheck = true;
                         System.out.println("Autorizacija uspjesna.");
                         System.out.println("Dobrodosli " + _ime + " .");
                     }
                 } else if (cIn.nextLine().toLowerCase().equals("ne")) {
-                    out.println("0");
-                    logOnCheck = true;
+                    out.writeObject("NOPASS");
+                    logInCheck = true;
                 }
             }
             
-            out.close();
-            in.close();
             System.out.println("Autorizacija uspjesna.");
-            this.objectSock=new Socket(iAddress,IPORT);
-            this.oInS=new ObjectInputStream(objectSock.getInputStream());
-            this.oOutS=new ObjectOutputStream(objectSock.getOutputStream());
             
 //            prima inventar
             System.out.println("Inicijalizacija inventara...");
-            inventar=(HashMap<Proizvod,Integer>)oInS.readObject();
+            inventar=(HashMap<Proizvod,Integer>)in.readObject();
 //            salje ime
-            oOutS.writeObject(_ime);
+            out.writeObject(_ime);
 //          MENI+salje zahtjev
-            kupacMeni(inventar,oOutS,oInS);
+            kupacMeni(inventar);
             
-//            PRIMA RACUN
-            Racun racun=(Racun)oInS.readObject();
-            System.out.println("Vas racun:");
-            racun.print();
-            System.out.println("Pritisnite ENTER za kraj.");
-            cIn.nextLine();
 //            KRAJ zatvori sve konekcije
             
             cIn.close();
-            oInS.close();
-            oOutS.close();
+            in.close();
+            out.close();
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -133,8 +117,7 @@ public class KupacKlijent extends Thread {
         KupacKlijent kk = new KupacKlijent();
         kk.start();
     }
-    public void kupacMeni(HashMap<Proizvod,Integer>inventar,ObjectOutputStream oOutS,ObjectInputStream oInS){
-        Scanner cIn=new Scanner(System.in);
+    public void kupacMeni(HashMap<Proizvod,Integer>inventar){
         boolean end=false;
         while(!end){
             SistemProdaje.cls();
@@ -146,7 +129,7 @@ public class KupacKlijent extends Thread {
             System.out.println("Opcije:");
             System.out.println("1. Pregled inventara.");
             System.out.println("2. Pregled korpe.");
-            System.out.println("3. Promjena proizvoda u korpi.");
+            System.out.println("3. Dodavanje proizvoda u korpi.");
             System.out.println("4. Finisiranje narudzbe.");
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
@@ -179,10 +162,10 @@ public class KupacKlijent extends Thread {
                         double sum=0;
                         System.out.println("-------------------");
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
-                        for (Proizvod p : inventar.keySet()) {
+                        for (Proizvod p : korpa.keySet()) {
                             p.print();
-                            sum+=p.getCijena()*inventar.get(p);
-                            System.out.printf(" x" + inventar.get(p) + "\n");
+                            sum+=p.getCijena()*korpa.get(p);
+                            System.out.printf(" x" + korpa.get(p) + "\n");
                         }
                         System.out.println("-------------------");
                         System.out.println("Ukupna cijena: "+sum);
@@ -229,12 +212,24 @@ public class KupacKlijent extends Thread {
                 
                 case 4:{
                 try {
-                    oOutS.writeObject(korpa);
-                    System.out.println("Narudzba poslana.");
-                    System.out.println("Pritisnite ENTER da nastavite.");
+                    out.writeObject("kupovina");
+                    if(((String)in.readObject()).equals("accepted")){
+                        out.writeObject(korpa);
+                        System.out.println("Narudzba poslana.");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                        Racun racun=(Racun)in.readObject();
+                        SistemProdaje.cls();
+                        System.out.println("Vas racun:");
+                        racun.print();
+                        System.out.println("Pritisnite ENTER za kraj.");
+                        cIn.nextLine();
+                        end=true;
+                    }
+                    System.out.println("Zahtjev nije poslan.");
+                    System.out.println("Pritisnite ENTER za kraj.");
                     cIn.nextLine();
-                    Racun racun=(Racun)oInS.readObject();
-                    racun.print();
+                    end=true;
                 } catch (IOException | ClassNotFoundException ex) {
                     Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -244,8 +239,13 @@ public class KupacKlijent extends Thread {
                     
                 }
                 case 0:{
-                    end=true;
-                    break;
+                    try {
+                        out.writeObject("0");
+                        end=true;
+                        break;
+                    } catch (IOException ex) {
+                        Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 default:
             }

@@ -117,7 +117,7 @@ public class Racun implements java.io.Serializable {
 //	System.out.println("--------------");
         System.out.println(_time);
         System.out.println("Radnik: " + _cashier);
-        if (!_buyer.isEmpty()) {
+        if (!_buyer.equals("no_name")) {
             System.out.println("Kupac: " + _buyer);
         }
         for (Proizvod i : _lista.keySet()) {
