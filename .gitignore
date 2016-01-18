@@ -1,6 +1,6 @@
-build/
-build/*
-dist/
-dist/*
-nbproject/private/
-nbproject/private/*
+SoftySales/build/
+SoftySales/build/*
+SoftySales/dist/
+SoftySales/dist/*
+SoftySales/nbproject/private/
+SoftySales/nbproject/private/*
