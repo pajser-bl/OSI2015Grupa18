@@ -155,13 +155,15 @@ public class KasaServer {
                 while (!end) {
                     msg = (String) in.readObject();
                     if (_listaKupaca.contains(msg)) {
-                        out.writeObject("1");
+                        out.writeObject("ACCEPTED");
                         end = true;
                         name = msg;
-                    } else if (msg.equals("NOPASS")) {
+                    } else if (msg.toLowerCase().equals("exit")) {
+                        out.writeObject("EXIT");
                         end = true;
                         name = "no_name";
-                    }
+                    }else 
+                        out.writeObject("DENIED");
                 }
 
 //                salje inventar
