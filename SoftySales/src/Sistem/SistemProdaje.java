@@ -103,7 +103,7 @@ public class SistemProdaje {
             oIn.close();
             fIn.close();
             if (!listaRadnika.containsKey("admin")) {
-                listaRadnika.put("admin", sha256("1111"));
+                listaRadnika.put("admin", "d17f25ecfbcc7857f7bebea469308be0b2580943e96d13a3ad98a13675c4bfc2");
             }
             return listaRadnika;
         } catch (FileNotFoundException ex) {
