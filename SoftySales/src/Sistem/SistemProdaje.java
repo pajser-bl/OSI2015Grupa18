@@ -428,7 +428,7 @@ public class SistemProdaje {
             System.out.println("4. Pravljenje izvjestaja.");
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
-            System.out.printf("[1/2/3/0]: ");
+            System.out.printf("[1/2/3/4/0]: ");
             opcija = cIn.nextLine();
             switch (opcija) {
                 case "1": {
