@@ -80,7 +80,7 @@ public class Racun implements java.io.Serializable {
     public void finish() {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
         Date date = new Date();
-        this._time = dateFormat.format(date);
+        _time = dateFormat.format(date);
         try {
             FileOutputStream fOut = new FileOutputStream("racuni" + File.separator + "R-" + _time + ".ser");
             ObjectOutputStream oOut = new ObjectOutputStream(fOut);

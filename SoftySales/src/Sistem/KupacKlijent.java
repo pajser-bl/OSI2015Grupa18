@@ -66,7 +66,7 @@ public class KupacKlijent extends Thread {
                 _ime = ime;
                 return true;
             } else {
-                System.out.println("Neodgovarajuci podatci.");
+                System.out.println("Neodgovarajuci podaci.");
             }
             return false;
         } catch (IOException | ClassNotFoundException ex) {
