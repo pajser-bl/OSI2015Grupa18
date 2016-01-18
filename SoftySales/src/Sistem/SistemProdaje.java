@@ -26,10 +26,7 @@ import java.util.logging.Logger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- *
- * @author pajser
- */
+
 public class SistemProdaje {
 
     public static final File RACUNI = new File("racuni");
