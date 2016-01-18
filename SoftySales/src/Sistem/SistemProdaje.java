@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Sistem;
-//pokusaj
 
 import Podaci.Dan;
 import Podaci.Godina;
@@ -20,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,7 +46,7 @@ public class SistemProdaje {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer();
+            StringBuilder hexString = new StringBuilder();
 
             for (int i = 0; i < hash.length; i++) {
                 String hex = Integer.toHexString(0xff & hash[i]);
@@ -62,7 +57,7 @@ public class SistemProdaje {
             }
 
             _pwd = hexString.toString();
-        } catch (Exception ex) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
             Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
         }
         
@@ -89,7 +84,7 @@ public class SistemProdaje {
     }
 //    serijalizacija naloga
 
-    public static void save(HashMap<String, String> lista) {
+    public static void saveRadnici(HashMap<String, String> lista) {
         try {
             FileOutputStream fOut = new FileOutputStream("lista_radnika.ser");
             ObjectOutputStream oOut = new ObjectOutputStream(fOut);
@@ -103,7 +98,7 @@ public class SistemProdaje {
         }
     }    
 
-    public static HashMap<String, String> read() {
+    public static HashMap<String, String> readRadnici() {
         try {
             HashMap<String, String> listaRadnika;
             FileInputStream fIn = new FileInputStream("lista_radnika.ser");
@@ -208,8 +203,8 @@ public class SistemProdaje {
         String opcije;
         while (!end) {
             cls();
-            save(lista);
-            lista = read();
+            saveRadnici(lista);
+            lista = readRadnici();
             System.out.println("-------------------");
             System.out.println("Uravljanje nalozima:");
             System.out.println("1. Pregled naloga.");
@@ -695,6 +690,14 @@ public class SistemProdaje {
         if (!IZVJESTAJI.exists() || !IZVJESTAJI.isDirectory()) {
             f = new File("izvjestaji");
             f.mkdir();
+        }
+        
+        if (!new File("lista_kupaca.ser").exists()) {
+            saveKupci(new ArrayList());
+        }
+        
+        if (!new File("lista_radnika.ser").exists()) {
+            saveRadnici(new HashMap());
         }
         
     }

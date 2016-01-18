@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Sistem;
 
 import Podaci.Proizvod;
@@ -39,16 +34,15 @@ public class KasaServer {
     public KasaServer() {
         cIn = new Scanner(System.in);
 
-//        _listaKupaca=new ArrayList();
-//        SistemProdaje.saveKupci(_listaKupaca);
-//        _listaKupaca=SistemProdaje.readKupci();
-        _listaZahtjeva = new ArrayList();
-        _listaRadnika = SistemProdaje.read();
-        _listaKupaca = SistemProdaje.readKupci();
-        //SistemProdaje.save(_listaRadnika);
-//        inicijalizacija fajlova
+//      inicijalizacija fajlova
         SistemProdaje.fajlSistem();
-//        inicijalizacija threda
+
+        _listaKupaca = SistemProdaje.readKupci();
+        _listaRadnika = SistemProdaje.readRadnici();
+
+        _listaZahtjeva = new ArrayList();
+        
+//      inicijalizacija threda
         KasaThread kasaThread = new KasaThread();
         kasaThread.start();
 //        login i rad servera
