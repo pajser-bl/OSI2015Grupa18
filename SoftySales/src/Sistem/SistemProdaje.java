@@ -654,19 +654,16 @@ public class SistemProdaje {
     }
 
     public final static void cls() {
-//        try {
-//            final String os = System.getProperty("os.name");
-//            if (os.contains("Windows")) {
-//                Runtime.getRuntime().exec("cls");
-//            } else {
-//                Runtime.getRuntime().exec("clear");
-//            }
-//        } catch (IOException ex) {
-//            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-    System.out.print("\033[H\033[2J");  
-    System.out.flush();  
-        
+        try {
+            final String os = System.getProperty("os.name");
+            if (os.contains("Windows")) {
+                Runtime.getRuntime().exec("cls");
+            } else {
+                Runtime.getRuntime().exec("clear");
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static final void fajlSistem() {
@@ -704,7 +701,6 @@ public class SistemProdaje {
         if (!new File("lista_radnika.ser").exists()) {
             saveRadnici(new HashMap());
         }
-
     }
 
 }
