@@ -147,8 +147,42 @@ public class SistemProdaje {
             return null;
         }
     }
+//serijalizacija inventara
 
+    public static void saveInventar(HashMap<Proizvod, Integer> inventar) {
+        try {
+            FileOutputStream fOut = new FileOutputStream("inventar.ser");
+            ObjectOutputStream oOut = new ObjectOutputStream(fOut);
+            oOut.writeObject(inventar);
+            oOut.close();
+            fOut.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public static HashMap<Proizvod, Integer> readInventar(){
+        try {
+            HashMap<Proizvod, Integer> inventar;
+            FileInputStream fIn = new FileInputStream("inventar.ser");
+            ObjectInputStream oIn = new ObjectInputStream(fIn);
+            inventar = (HashMap<Proizvod, Integer>) oIn.readObject();
+            oIn.close();
+            fIn.close();
+            return inventar;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 //  admin meni
+
     public static void adminMeni(HashMap<String, String> lista) {
         boolean end = false;
         Scanner cIn = new Scanner(System.in);
@@ -434,7 +468,7 @@ public class SistemProdaje {
     }
 
 //    radnik meni
-    public static void radnikMeni(String kasir, ArrayList<String> listaKupaca, ArrayList<HashMap<Proizvod, Integer>> listaZahtjeva) {
+    public static void radnikMeni(String kasir, ArrayList<String> listaKupaca, ArrayList<HashMap<Proizvod, Integer>> listaZahtjeva, HashMap<Proizvod, Integer> inventar) {
         Scanner cIn = new Scanner(System.in);
         boolean end = false;
 //        FORMAT VREMENA
@@ -470,11 +504,11 @@ public class SistemProdaje {
                     break;
                 }
                 case 2: {
-                    cls();
                     upravljanjeKupcima(listaKupaca);
                     break;
                 }
                 case 3: {
+                    upravljanjeProizvodima(inventar);
                     break;
                 }
                 case 4: {
@@ -602,7 +636,125 @@ public class SistemProdaje {
         }
     }
 
-    public static void upravljanjeProizvodima() {
+    public static void upravljanjeProizvodima(HashMap<Proizvod, Integer> inventar) {
+        Scanner cIn = new Scanner(System.in);
+        boolean end = false;
+        while (!end) {
+            cls();
+            System.out.println("-------------------");
+            System.out.println("1. Prikaz proizvoda.");
+            System.out.println("2. Dodavanje novih proizvoda.");
+            System.out.println("3. Promjena stanja proizvoda.");
+            System.out.println("4. Uklanjanje proizvoda.");
+            System.out.println("0. Nazad.");
+            System.out.println("-------------------");
+            switch (Integer.parseInt(cIn.nextLine())) {
+                case 1: {
+                    if (inventar.isEmpty()) {
+                        System.out.println("Lista proizvoda je prazna.");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                    } else {
+                        System.out.println("-------------------");
+                        System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
+                        for (Proizvod p : inventar.keySet()) {
+                            p.print();
+                            System.out.printf(" x" + inventar.get(p) + "\n");
+                        }
+                        System.out.println("-------------------");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                    }
+                    break;
+                }
+                case 2: {
+                    cls();
+                    System.out.printf("Naziv novog proizvoda: ");
+                    String naziv = cIn.nextLine();
+                    System.out.printf("Cijena novog proizvoda:");
+                    double cijena = cIn.nextDouble();
+                    Proizvod proizvod = new Proizvod(naziv, cijena);
+                    System.out.printf("Unesite stanje proizvoda: ");
+                    int kolicina = cIn.nextInt();
+                    inventar.put(proizvod, kolicina);
+                    System.out.println("Proizvod uspjesno dodan.");
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
+                    break;
+                }
+                case 3: {
+                    cls();
+                    if (inventar.isEmpty()) {
+                        System.out.println("Lista proizvoda je prazna.");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                    } else {
+                        System.out.println("-------------------");
+                        System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
+                        for (Proizvod p : inventar.keySet()) {
+                            p.print();
+                            System.out.printf(" x" + inventar.get(p) + "\n");
+                        }
+                        System.out.println("-------------------");
+                        System.out.printf("Proizvod cije stanje se mjenja[SIFRA]: ");
+                        String ime = cIn.nextLine();
+                        Proizvod proizvod = null;
+                        for (Proizvod p : inventar.keySet()) {
+                            if (p.getNaziv().equals(ime));
+                            proizvod = p;
+                        }
+                        if (inventar.containsKey(proizvod)) {
+                            System.out.printf("Novo stanje proizvoda: ");
+                            Integer stanje = cIn.nextInt();
+                            inventar.put(proizvod, stanje);
+                            System.out.println("Stanje uspjesno promjenjeno.");
+                        } else {
+                            System.out.println("Proizvod ne postoji.");
+                        }
+                    }
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
+                    break;
+                }
+                case 4: {
+                    cls();
+                    if (inventar.isEmpty()) {
+                        System.out.println("Lista proizvoda je prazna.");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                    } else {
+                        System.out.println("-------------------");
+                        System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
+                        for (Proizvod p : inventar.keySet()) {
+                            p.print();
+                            System.out.printf(" x" + inventar.get(p) + "\n");
+                        }
+                        System.out.println("-------------------");
+                        System.out.printf("Proizvod koji zelite da uklonite: ");
+                        String ime = cIn.nextLine();
+                        Proizvod proizvod = null;
+                        for (Proizvod p : inventar.keySet()) {
+                            if (p.getNaziv().equals(ime));
+                            proizvod = p;
+                        }
+                        if (inventar.containsKey(proizvod)) {
+                            inventar.remove(proizvod);
+                            System.out.println("Proizvod uspjesno uklonjen.");
+                        } else {
+                            System.out.println("Proizvod ne postoji.");
+                        }
+                    }
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
+                    break;
+                }
+                case 0: {
+                    end=true;
+                    break;
+                }
+                default:
+            }
+        }
     }
 
     public static void pravljenjeIzvjestaja(String kasir) {
@@ -702,6 +854,10 @@ public class SistemProdaje {
         if (!new File("lista_radnika.ser").exists()) {
             HashMap<String, String> hm = new HashMap();
             saveRadnici(hm);
+        }
+        if (!new File("inventar.ser").exists()) {
+            HashMap<Proizvod, Integer> hm = new HashMap();
+            saveInventar(hm);
         }
     }
 
