@@ -152,7 +152,6 @@ public class SistemProdaje {
     public static void adminMeni(HashMap<String, String> lista) {
         boolean end = false;
         Scanner cIn = new Scanner(System.in);
-        int opcije;
         while (!end) {
             cls();
             System.out.println("-------------------");
@@ -164,9 +163,7 @@ public class SistemProdaje {
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
 
-            opcije = Integer.parseInt(cIn.nextLine());
-
-            switch (opcije) {
+            switch (Integer.parseInt(cIn.nextLine())) {
                 case 1: {
                     cls();
                     upravljanjeNalozima(lista);
@@ -196,7 +193,6 @@ public class SistemProdaje {
     public static void upravljanjeNalozima(HashMap<String, String> lista) {
         Scanner cIn = new Scanner(System.in);
         boolean end = false;
-        String opcije;
         while (!end) {
             cls();
             saveRadnici(lista);
@@ -210,9 +206,9 @@ public class SistemProdaje {
             System.out.println("0. Nazad");
             System.out.println("-------------------");
             System.out.printf("[1/2/3/4/0]: ");
-            opcije = cIn.nextLine();
-            switch (opcije) {
-                case "1": {
+
+            switch (Integer.parseInt(cIn.nextLine())) {
+                case 1: {
                     cls();
                     System.out.println("-------------------");
                     for (String i : lista.keySet()) {
@@ -223,7 +219,7 @@ public class SistemProdaje {
                     cIn.nextLine();
                     break;
                 }
-                case "2": {
+                case 2: {
                     cls();
                     System.out.printf("Username: ");
                     String user = cIn.nextLine();
@@ -244,7 +240,7 @@ public class SistemProdaje {
                     }
 
                 }
-                case "3": {
+                case 3: {
                     cls();
                     System.out.printf("Nalog za modifikaciju: ");
                     String user = cIn.nextLine();
@@ -266,7 +262,7 @@ public class SistemProdaje {
                     }
                     break;
                 }
-                case "4": {
+                case 4: {
                     cls();
                     System.out.printf("Nalog za brisanje: ");
                     String user = cIn.nextLine();
@@ -283,11 +279,13 @@ public class SistemProdaje {
                     }
                     break;
                 }
-                case "0": {
+                case 0: {
                     end = true;
                     break;
                 }
                 default:
+                    System.out.println("Nepostojeca opcija.");
+                    cIn.nextLine();
             }
         }
     }
@@ -304,8 +302,9 @@ public class SistemProdaje {
             System.out.println("0. Nazad");
             System.out.println("-------------------");
             System.out.printf("[1/2/0]: ");
-            switch (cIn.nextLine()) {
-                case "1": {
+
+            switch (Integer.parseInt(cIn.nextLine())) {
+                case 1: {
                     boolean endPodmeni = false;
                     while (!endPodmeni) {
                         cls();
@@ -318,8 +317,9 @@ public class SistemProdaje {
                         System.out.println("0. Nazad");
                         System.out.println("-------------------");
                         System.out.printf("[1/2/3/4/0]: ");
-                        switch (cIn.nextLine()) {
-                            case "1": {
+
+                        switch (Integer.parseInt(cIn.nextLine())) {
+                            case 1: {
                                 File dani = new File("dani");
                                 File[] files = dani.listFiles();
                                 String danZaIspis;
@@ -334,7 +334,7 @@ public class SistemProdaje {
                                 cIn.nextLine();
                                 break;
                             }
-                            case "2": {
+                            case 2: {
                                 File sedmice = new File("sedmice");
                                 File[] files = sedmice.listFiles();
                                 String sedmicaZaIspis;
@@ -349,7 +349,7 @@ public class SistemProdaje {
                                 cIn.nextLine();
                                 break;
                             }
-                            case "3": {
+                            case 3: {
                                 File mjeseci = new File("mjeseci");
                                 File[] files = mjeseci.listFiles();
                                 String mjesecZaIspis;
@@ -364,7 +364,7 @@ public class SistemProdaje {
                                 cIn.nextLine();
                                 break;
                             }
-                            case "4": {
+                            case 4: {
                                 File godine = new File("godine");
                                 File[] files = godine.listFiles();
                                 String godinaZaIspis;
@@ -379,7 +379,7 @@ public class SistemProdaje {
                                 cIn.nextLine();
                                 break;
                             }
-                            case "0": {
+                            case 0: {
                                 endPodmeni = true;
                                 break;
                             }
@@ -388,7 +388,7 @@ public class SistemProdaje {
                     }
                     break;
                 }
-                case "2": {
+                case 2: {
                     boolean endPodmeni = false;
                     while (!endPodmeni) {
                         cls();
@@ -399,31 +399,35 @@ public class SistemProdaje {
                         System.out.println("0. Nazad");
                         System.out.println("-------------------");
                         System.out.printf("[1/2/0]: ");
-                        switch (cIn.nextLine()) {
-                            case "1": {
+                        switch (Integer.parseInt(cIn.nextLine())) {
+                            case 1: {
                                 System.out.println("Unesite sifru proizvoda:");
                                 String proizvod = cIn.nextLine();
                                 File godina = new File("godine");
                                 File godine[] = godina.listFiles();
                                 break;
                             }
-                            case "2": {
+                            case 2: {
                                 break;
                             }
-                            case "0": {
+                            case 0: {
                                 endPodmeni = true;
                                 break;
                             }
                             default:
+                                System.out.println("Nepostojeca opcija.");
+                                cIn.nextLine();
                         }
                     }
                     break;
                 }
-                case "0": {
+                case 0: {
                     end = true;
                     break;
                 }
                 default:
+                    System.out.println("Nepostojeca opcija.");
+                    cIn.nextLine();
             }
 
         }
@@ -433,7 +437,6 @@ public class SistemProdaje {
     public static void radnikMeni(String kasir, ArrayList<String> listaKupaca, ArrayList<HashMap<Proizvod, Integer>> listaZahtjeva) {
         Scanner cIn = new Scanner(System.in);
         boolean end = false;
-        String opcija;
 //        FORMAT VREMENA
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
         Date date = new Date();
@@ -453,9 +456,8 @@ public class SistemProdaje {
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
             System.out.printf("[1/2/3/4/0]: ");
-            opcija = cIn.nextLine();
-            switch (opcija) {
-                case "1": {
+            switch (Integer.parseInt(cIn.nextLine())) {
+                case 1: {
                     cls();
                     if (listaZahtjeva.isEmpty()) {
                         System.out.println("Trenutno nema zahtjeva za kupovinu.");
@@ -467,23 +469,25 @@ public class SistemProdaje {
                     }
                     break;
                 }
-                case "2": {
+                case 2: {
                     cls();
                     upravljanjeKupcima(listaKupaca);
                     break;
                 }
-                case "3": {
+                case 3: {
                     break;
                 }
-                case "4": {
+                case 4: {
                     pravljenjeIzvjestaja(kasir);
                     break;
                 }
-                case "0": {
+                case 0: {
                     end = true;
                     break;
                 }
                 default:
+                    System.out.println("Nepostojeca opcija.");
+                    cIn.nextLine();
             }
         }
     }
@@ -491,7 +495,6 @@ public class SistemProdaje {
     public static void upravljanjeKupcima(ArrayList<String> listaKupaca) {
         boolean end = false;
         Scanner cIn = new Scanner(System.in);
-        String opcija;
         while (!end) {
             cls();
             listaKupaca = readKupci();
@@ -503,9 +506,8 @@ public class SistemProdaje {
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
-            opcija = cIn.nextLine();
-            switch (opcija) {
-                case "1": {
+            switch (Integer.parseInt(cIn.nextLine())) {
+                case 1: {
                     if (listaKupaca.isEmpty()) {
                         System.out.println("Lista kupaca je prazna.");
                         System.out.println("Pritisnite ENTER da nastavite.");
@@ -521,7 +523,7 @@ public class SistemProdaje {
                     }
                     break;
                 }
-                case "2": {
+                case 2: {
                     System.out.printf("Ime novog kupca:");
                     String ime = cIn.nextLine();
                     if (listaKupaca.contains(ime)) {
@@ -537,7 +539,7 @@ public class SistemProdaje {
                     }
                     break;
                 }
-                case "3": {
+                case 3: {
                     System.out.println("-------------------");
                     for (String s : listaKupaca) {
                         System.out.println(s);
@@ -567,7 +569,7 @@ public class SistemProdaje {
                     }
                     break;
                 }
-                case "4": {
+                case 4: {
                     System.out.println("-------------------");
                     for (String s : listaKupaca) {
                         System.out.println(s);
@@ -589,11 +591,13 @@ public class SistemProdaje {
                     break;
 
                 }
-                case "0": {
+                case 0: {
                     end = true;
                     break;
                 }
                 default:
+                    System.out.println("Nepostojeca opcija.");
+                    cIn.nextLine();
             }
         }
     }
@@ -615,28 +619,30 @@ public class SistemProdaje {
             System.out.println("4. Godinu.");
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
-            switch (cIn.nextLine()) {
-                case "1": {
+            switch (Integer.parseInt(cIn.nextLine())) {
+                case 1: {
                     opcija = "DAN";
                     break;
                 }
-                case "2": {
+                case 2: {
                     opcija = "SEDMICA";
                     break;
                 }
-                case "3": {
+                case 3: {
                     opcija = "MJESEC";
                     break;
                 }
-                case "4": {
+                case 4: {
                     opcija = "GODINA";
                     break;
                 }
-                case "0": {
+                case 0: {
                     end = true;
                     break;
                 }
                 default:
+                    System.out.println("Nepostojeca opcija.");
+                    cIn.nextLine();
             }
         }
         if (!end) {
@@ -648,16 +654,19 @@ public class SistemProdaje {
     }
 
     public final static void cls() {
-        try {
-            final String os = System.getProperty("os.name");
-            if (os.contains("Windows")) {
-                Runtime.getRuntime().exec("cls");
-            } else {
-                Runtime.getRuntime().exec("clear");
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            final String os = System.getProperty("os.name");
+//            if (os.contains("Windows")) {
+//                Runtime.getRuntime().exec("cls");
+//            } else {
+//                Runtime.getRuntime().exec("clear");
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+    System.out.print("\033[H\033[2J");  
+    System.out.flush();  
+        
     }
 
     public static final void fajlSistem() {
