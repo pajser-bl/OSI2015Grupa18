@@ -29,9 +29,10 @@ public class KasaServer {
     private Scanner cIn;
 //    podaci o radnicima i administratoru
     private static HashMap<String, String> _listaRadnika;
+    private static HashMap<Proizvod,Integer> _inventar;
     private static ArrayList<String> _listaKupaca;
     private static ArrayList<HashMap<Proizvod, Integer>> _listaZahtjeva;
-
+    
     public String getCashier() {
         return _cashier;
     }
@@ -84,7 +85,7 @@ public class KasaServer {
         if (adminCheck) {
             SistemProdaje.adminMeni(_listaRadnika);
         } else {
-            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva);
+            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva,_inventar;
         }
     }
 
