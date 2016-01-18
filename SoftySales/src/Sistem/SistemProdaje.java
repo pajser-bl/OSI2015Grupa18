@@ -509,11 +509,10 @@ public class SistemProdaje {
                         cIn.nextLine();
                     } else {
 //                        sistem kupovine
-                        for(Racun r:listaZahtjeva){
-                            for(Proizvod p:r._lista.keySet()){
-                                inventar.replace(p,inventar.get(p)-r._lista.get(p));
-                            }
-                            r.finish();
+                        for(int i=0;i<listaZahtjeva.size();i++){
+                            listaZahtjeva.get(i).finish();
+                            listaZahtjeva.get(i).print();
+                            listaZahtjeva.remove(i);
                         }
                     }
                     break;

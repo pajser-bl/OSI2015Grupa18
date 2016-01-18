@@ -29,6 +29,7 @@ public class KupacKlijent extends Thread {
     private Socket sock;
     private Socket objectSock;
     private boolean logInCheck;
+    private boolean logOnCheck;
     private String _ime;
     private HashMap<Proizvod,Integer>inventar;
     private HashMap<Proizvod,Integer>korpa;
@@ -36,15 +37,15 @@ public class KupacKlijent extends Thread {
     public String getIme() {
         return _ime;
     }
-
+    public void setIme(String ime){
+        _ime=ime;
+    }
     public KupacKlijent() {
         try {
-            
             this.logInCheck = false;
             this.korpa=new HashMap();
             this.iAddress = InetAddress.getByName("127.0.0.1");
             this.sock = new Socket(iAddress, PORT);
-            
             this.out=new ObjectOutputStream(sock.getOutputStream());
             this.in=new ObjectInputStream(sock.getInputStream());
             this.cIn = new Scanner(System.in);
@@ -55,51 +56,51 @@ public class KupacKlijent extends Thread {
         }
     }
 
-    public boolean logInCheck() {
+    public void logInCheck() {
         try {
-            String ime;
-            System.out.printf("Unesite vase ime: ");
-            ime = cIn.nextLine();
-            out.writeObject(ime);
-            String rec = (String)in.readObject();
-            if (rec.equals("1")) {
-                _ime = ime;
-                return true;
-            } else {
-                System.out.println("Neodgovarajuci podaci.");
+            while (!logInCheck) {
+                System.out.printf("Da li ste privilegovani kupac?[Da/Ne]:");
+                if (cIn.nextLine().toLowerCase().equals("da")) {
+                    while(!logOnCheck){
+                        System.out.println("Unesite vase ime");
+                        String ime=cIn.nextLine();
+                        out.writeObject(ime);
+                        String rec=(String)in.readObject();
+                        if(rec.equals("ACCEPTED")){
+                            _ime=ime;
+                            logOnCheck=true;
+                            logInCheck=true;
+                        }else if(rec.equals("DENIED")){
+                            System.out.println("Niste na spisku.");
+                        }else if(rec.equals("EXIT")){
+                            _ime="no_name";
+                            logOnCheck=true;
+                            logInCheck=true;
+                        }
+                    }
+                } else if (cIn.nextLine().toLowerCase().equals("ne")) {
+                    logInCheck = true;
+                    _ime="no_name";
+                    out.writeObject("EXIT");
+                    String t=(String)in.readObject();
+                }
             }
-            return false;
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
         }
     }
 
     @Override
     public void run() {
         try {
-            while (!logInCheck) {
-                System.out.printf("Da li ste privilegovani kupac?[Da/Ne]:");
-                if (cIn.nextLine().toLowerCase().equals("da")) {
-                    if (logInCheck()) {
-                        out.writeObject("TRUE");
-                        logInCheck = true;
-                        System.out.println("Autorizacija uspjesna.");
-                        System.out.println("Dobrodosli " + _ime + " .");
-                    }
-                } else if (cIn.nextLine().toLowerCase().equals("ne")) {
-                    out.writeObject("NOPASS");
-                    logInCheck = true;
-                }
+            logInCheck();
+            if(!_ime.equals("no_name")){
+                System.out.println("Autorizacija uspjesna.");
+                System.out.println("Dobro dosli "+_ime+" .");
             }
-            
-            System.out.println("Autorizacija uspjesna.");
-            
 //            prima inventar
             System.out.println("Inicijalizacija inventara...");
             inventar=(HashMap<Proizvod,Integer>)in.readObject();
-//            salje ime
-            out.writeObject(_ime);
 //          MENI+salje zahtjev
             kupacMeni(inventar);
             
@@ -198,15 +199,17 @@ public class KupacKlijent extends Thread {
                         if(inventar.containsKey(proizvod)){
                             System.out.printf("Unesite kolicinu: ");
                             Integer kolicina=cIn.nextInt();
-                            korpa.put(proizvod,kolicina);
-                            System.out.println("Proizvod dodan u korpu.");
+                            if(inventar.get(proizvod)<kolicina){
+                                System.out.println("Na stanju nema toliko artikala.");
+                            }else{
+                                korpa.put(proizvod,kolicina);
+                                System.out.println("Proizvod dodan u korpu.");
+                            }
                         }else
                             System.out.println("Proizvod ne postoji.");
-                            
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
                     }
-                        
                     break;
                 }
                 
@@ -225,11 +228,12 @@ public class KupacKlijent extends Thread {
                         System.out.println("Pritisnite ENTER za kraj.");
                         cIn.nextLine();
                         end=true;
+                    }else{
+                        System.out.println("Zahtjev nije poslan.");
+                        System.out.println("Pritisnite ENTER za kraj.");
+                        cIn.nextLine();
+                        end=true;
                     }
-                    System.out.println("Zahtjev nije poslan.");
-                    System.out.println("Pritisnite ENTER za kraj.");
-                    cIn.nextLine();
-                    end=true;
                 } catch (IOException | ClassNotFoundException ex) {
                     Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
                 }
