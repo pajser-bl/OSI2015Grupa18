@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Sistem;
 
 import java.io.BufferedReader;
@@ -18,12 +13,9 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author pajser
- */
-public class KupacKlijent extends Thread{
-    public static final int PORT=9001;
+public class KupacKlijent extends Thread {
+
+    public static final int PORT = 9001;
     private InetAddress iAddress;
     private BufferedReader in;
     private PrintWriter out;
@@ -32,61 +24,68 @@ public class KupacKlijent extends Thread{
     private boolean logInCheck;
     private boolean logOnCheck;
     private String _ime;
-    
-    public String getIme(){return _ime;}
-    public KupacKlijent(){
+
+    public String getIme() {
+        return _ime;
+    }
+
+    public KupacKlijent() {
         try {
-            this.logInCheck=false;
-            this.logOnCheck=false;
-            this.iAddress=InetAddress.getByName("127.0.0.1");
-            this.sock=new Socket(iAddress,PORT);
-            this.in=new BufferedReader(new InputStreamReader(sock.getInputStream()));
-            this.out=new PrintWriter((new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()))),true);
-            this.cIn=new Scanner(System.in);
+            this.logInCheck = false;
+            this.logOnCheck = false;
+            this.iAddress = InetAddress.getByName("127.0.0.1");
+            this.sock = new Socket(iAddress, PORT);
+            this.in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+            this.out = new PrintWriter((new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()))), true);
+            this.cIn = new Scanner(System.in);
         } catch (UnknownHostException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public boolean logInCheck(){
+
+    public boolean logInCheck() {
         try {
             String ime;
             System.out.printf("Unesite vase ime: ");
-            ime=cIn.nextLine();
+            ime = cIn.nextLine();
             out.println(ime);
-            String rec=in.readLine();
-            if(rec.equals("1")){
-                _ime=ime;
+            String rec = in.readLine();
+            if (rec.equals("1")) {
+                _ime = ime;
                 return true;
-            }else
+            } else {
                 System.out.println("Nepasdsa");
-                return false;
+            }
+            return false;
         } catch (IOException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }
+
     @Override
-    public void run () {
-        while(!logOnCheck){
+    public void run() {
+        while (!logOnCheck) {
             System.out.printf("Da li ste privilegovani kupac?[Da/Ne]:");
-            if(cIn.nextLine().toLowerCase().equals("da")){
-                if(logInCheck()){
+            if (cIn.nextLine().toLowerCase().equals("da")) {
+                if (logInCheck()) {
                     System.out.println("Autorizacija uspjesna.");
-                    System.out.println("Dobrodosli "+_ime+" .");
-                    logInCheck=true;
-                    logOnCheck=true;
+                    System.out.println("Dobrodosli " + _ime + " .");
+                    logInCheck = true;
+                    logOnCheck = true;
                 }
-            }else if(cIn.nextLine().toLowerCase().equals("ne")){
+            } else if (cIn.nextLine().toLowerCase().equals("ne")) {
                 out.println("0");
-                logOnCheck=true;
+                logOnCheck = true;
             }
         }
-        
+
     }
-    public static void main(String args[]){
-        KupacKlijent kk=new KupacKlijent();
+
+    public static void main(String args[]) {
+        KupacKlijent kk = new KupacKlijent();
         kk.start();
     }
 }
