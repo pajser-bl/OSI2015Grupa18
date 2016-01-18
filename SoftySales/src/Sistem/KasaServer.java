@@ -1,6 +1,7 @@
 package Sistem;
 
 import Podaci.Proizvod;
+import Podaci.Racun;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -24,16 +26,16 @@ import java.util.logging.Logger;
  */
 public class KasaServer {
 
-    private String _cashier;
+    private static String _cashier;
 
     private Scanner cIn;
 //    podaci o radnicima i administratoru
     private static HashMap<String, String> _listaRadnika;
     private static HashMap<Proizvod, Integer> _inventar;
     private static ArrayList<String> _listaKupaca;
-    private static ArrayList<HashMap<Proizvod, Integer>> _listaZahtjeva;
+    private static ArrayList<Racun> _listaZahtjeva;
 
-    public String getCashier() {
+    public static String getCashier() {
         return _cashier;
     }
 
@@ -130,6 +132,7 @@ public class KasaServer {
         BufferedReader in;
         PrintWriter out;
         ObjectInputStream oInS;
+        ObjectOutputStream oOutS;
         Socket sock;
         HashMap<Proizvod, Integer> zahtjev;
 
@@ -148,23 +151,34 @@ public class KasaServer {
         public void run() {
             boolean end = false;
             String msg;
+            String name=null;
             try {
                 while (!end) {
                     msg = in.readLine();
-                    System.out.println("Adsada");
                     if (_listaKupaca.contains(msg)) {
                         out.println("1");
                         end = true;
+                        name=msg;
                     } else {
                         out.println("0");
                     }
                 }
-                in.close();
-                out.close();
+                System.out.printf("AAaasdasd");
+                //in.close();
+                //out.close();
                 this.oInS = new ObjectInputStream(sock.getInputStream());
+                this.oOutS=new ObjectOutputStream(sock.getOutputStream());
+                oOutS.writeObject(_inventar);
+                System.out.printf("AAa");
                 if ((zahtjev = (HashMap<Proizvod, Integer>) oInS.readObject()) != null) {
-                    KasaServer._listaZahtjeva.add(zahtjev);
+                    Racun racun=new Racun(getCashier(),name);
+                    for(Proizvod p:zahtjev.keySet()){
+                        racun.add(p, zahtjev.get(p));
+                        KasaServer._listaZahtjeva.add(racun);
+                    }
                     oInS.close();
+                    oOutS.writeObject(racun);
+                    oOutS.close();
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);

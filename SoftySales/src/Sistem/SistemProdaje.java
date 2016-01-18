@@ -276,6 +276,11 @@ public class SistemProdaje {
                 }
                 case 3: {
                     cls();
+                    System.out.println("-------------------");
+                    for (String i : lista.keySet()) {
+                        System.out.println(i);
+                    }
+                    System.out.println("-------------------");
                     System.out.printf("Nalog za modifikaciju: ");
                     String user = cIn.nextLine();
                     String pass;
@@ -298,6 +303,11 @@ public class SistemProdaje {
                 }
                 case 4: {
                     cls();
+                    System.out.println("-------------------");
+                    for (String i : lista.keySet()) {
+                        System.out.println(i);
+                    }
+                    System.out.println("-------------------");
                     System.out.printf("Nalog za brisanje: ");
                     String user = cIn.nextLine();
                     if (lista.containsKey(user)) {
@@ -468,7 +478,7 @@ public class SistemProdaje {
     }
 
 //    radnik meni
-    public static void radnikMeni(String kasir, ArrayList<String> listaKupaca, ArrayList<HashMap<Proizvod, Integer>> listaZahtjeva, HashMap<Proizvod, Integer> inventar) {
+    public static void radnikMeni(String kasir, ArrayList<String> listaKupaca, ArrayList<Racun> listaZahtjeva, HashMap<Proizvod, Integer> inventar) {
         Scanner cIn = new Scanner(System.in);
         boolean end = false;
 //        FORMAT VREMENA
@@ -499,7 +509,12 @@ public class SistemProdaje {
                         cIn.nextLine();
                     } else {
 //                        sistem kupovine
-
+                        for(Racun r:listaZahtjeva){
+                            for(Proizvod p:r._lista.keySet()){
+                                inventar.replace(p,inventar.get(p)-r._lista.get(p));
+                            }
+                            r.finish();
+                        }
                     }
                     break;
                 }
@@ -677,6 +692,7 @@ public class SistemProdaje {
                     System.out.printf("Unesite stanje proizvoda: ");
                     int kolicina = cIn.nextInt();
                     inventar.put(proizvod, kolicina);
+                    saveInventar(inventar);
                     System.out.println("Proizvod uspjesno dodan.");
                     System.out.println("Pritisnite ENTER da nastavite.");
                     cIn.nextLine();
@@ -707,6 +723,7 @@ public class SistemProdaje {
                             System.out.printf("Novo stanje proizvoda: ");
                             Integer stanje = cIn.nextInt();
                             inventar.put(proizvod, stanje);
+                            saveInventar(inventar);
                             System.out.println("Stanje uspjesno promjenjeno.");
                         } else {
                             System.out.println("Proizvod ne postoji.");
@@ -739,6 +756,7 @@ public class SistemProdaje {
                         }
                         if (inventar.containsKey(proizvod)) {
                             inventar.remove(proizvod);
+                            saveInventar(inventar);
                             System.out.println("Proizvod uspjesno uklonjen.");
                         } else {
                             System.out.println("Proizvod ne postoji.");

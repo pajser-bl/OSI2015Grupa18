@@ -20,7 +20,7 @@ public class Racun implements java.io.Serializable {
     private double _sum;
     private String _cashier;
     private String _buyer;
-    private final HashMap<Proizvod, Integer> _lista;
+    public final HashMap<Proizvod, Integer> _lista;
 
     //Getters
     public String getTime() {
