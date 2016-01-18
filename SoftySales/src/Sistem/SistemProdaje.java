@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Sistem;
-//pokusaj
 
 import Podaci.Dan;
 import Podaci.Godina;
@@ -20,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,11 +23,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
-/**
- *
- * @author pajser
- */
 public class SistemProdaje {
 
     public static final File RACUNI = new File("racuni");
@@ -41,16 +34,44 @@ public class SistemProdaje {
     public static final File MJESECI = new File("mjeseci");
     public static final File GODINE = new File("godine");
     public static final File IZVJESTAJI = new File("izvjestaji");
-    
+
+    public static String sha256(String password) {
+
+        String _pwd = "";
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes("UTF-8"));
+            StringBuilder hexString = new StringBuilder();
+
+            for (int i = 0; i < hash.length; i++) {
+                String hex = Integer.toHexString(0xff & hash[i]);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+
+            _pwd = hexString.toString();
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return _pwd;
+    }
+
     public static Integer loginCheck(String username, String password, HashMap<String, String> listaKorisnika) {
         if (username.equals("EXIT".toLowerCase()) || password.equals("EXIT".toLowerCase())) {
             return 0;
         }
         if (listaKorisnika.containsKey(username)) {
-            if (listaKorisnika.get(username).equals(password) && username.equals("admin")) {
+
+            String _pwd = sha256(password);
+
+            if (listaKorisnika.get(username).equals(_pwd) && username.equals("admin")) {
                 return 2;
             }
-            if (listaKorisnika.get(username).equals(password)) {
+            if (listaKorisnika.get(username).equals(_pwd)) {
                 return 1;
             }
             return -1;
@@ -59,7 +80,7 @@ public class SistemProdaje {
     }
 //    serijalizacija naloga
 
-    public static void save(HashMap<String, String> lista) {
+    public static void saveRadnici(HashMap<String, String> lista) {
         try {
             FileOutputStream fOut = new FileOutputStream("lista_radnika.ser");
             ObjectOutputStream oOut = new ObjectOutputStream(fOut);
@@ -71,9 +92,9 @@ public class SistemProdaje {
         } catch (IOException ex) {
             Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+    }
 
-    public static HashMap<String, String> read() {
+    public static HashMap<String, String> readRadnici() {
         try {
             HashMap<String, String> listaRadnika;
             FileInputStream fIn = new FileInputStream("lista_radnika.ser");
@@ -82,7 +103,7 @@ public class SistemProdaje {
             oIn.close();
             fIn.close();
             if (!listaRadnika.containsKey("admin")) {
-                listaRadnika.put("admin", "1111");
+                listaRadnika.put("admin", sha256("1111"));
             }
             return listaRadnika;
         } catch (FileNotFoundException ex) {
@@ -131,7 +152,7 @@ public class SistemProdaje {
     public static void adminMeni(HashMap<String, String> lista) {
         boolean end = false;
         Scanner cIn = new Scanner(System.in);
-        String opcije;
+        int opcije;
         while (!end) {
             cls();
             System.out.println("-------------------");
@@ -142,28 +163,31 @@ public class SistemProdaje {
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
-            
-            opcije = cIn.nextLine();
+
+            opcije = Integer.parseInt(cIn.nextLine());
+
             switch (opcije) {
-                case "1": {
+                case 1: {
                     cls();
                     upravljanjeNalozima(lista);
                     break;
                 }
-                case "2": {
+                case 2: {
                     cls();
                     pregledStatistike();
                     break;
                 }
-                case "3": {
+                case 3: {
 //                    PRAZNO
                     break;
                 }
-                case "0": {
+                case 0: {
                     end = true;
                     break;
                 }
                 default:
+                    System.out.println("Nepostojeca opcija.");
+                    cIn.nextLine();
             }
         }
         cIn.close();
@@ -175,8 +199,8 @@ public class SistemProdaje {
         String opcije;
         while (!end) {
             cls();
-            save(lista);
-            lista = read();
+            saveRadnici(lista);
+            lista = readRadnici();
             System.out.println("-------------------");
             System.out.println("Uravljanje nalozima:");
             System.out.println("1. Pregled naloga.");
@@ -212,13 +236,13 @@ public class SistemProdaje {
                     } else {
                         System.out.printf("Password: ");
                         String pass = cIn.nextLine();
-                        lista.put(user, pass);
+                        lista.put(user, sha256(pass));
                         System.out.println("Korisnik uspjesno dodan.");
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
                         break;
                     }
-                    
+
                 }
                 case "3": {
                     cls();
@@ -231,7 +255,7 @@ public class SistemProdaje {
                         user = cIn.nextLine();
                         System.out.printf("Novi Password: ");
                         pass = cIn.nextLine();
-                        lista.put(user, pass);
+                        lista.put(user, sha256(pass));
                         System.out.printf("Modifikacija zavrsena.");
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
@@ -360,7 +384,7 @@ public class SistemProdaje {
                                 break;
                             }
                             default:
-                        }                        
+                        }
                     }
                     break;
                 }
@@ -391,7 +415,7 @@ public class SistemProdaje {
                                 break;
                             }
                             default:
-                        }                        
+                        }
                     }
                     break;
                 }
@@ -401,7 +425,7 @@ public class SistemProdaje {
                 }
                 default:
             }
-            
+
         }
     }
 
@@ -417,7 +441,7 @@ public class SistemProdaje {
 //        podaci o vremenu
         String pocetakRada = dateFormat.format(date);
         String krajRada;
-        
+
         while (!end) {
             cls();
             System.out.println("Radnik: " + kasir + " .");
@@ -439,7 +463,7 @@ public class SistemProdaje {
                         cIn.nextLine();
                     } else {
 //                        sistem kupovine
-                        
+
                     }
                     break;
                 }
@@ -504,7 +528,7 @@ public class SistemProdaje {
                         System.out.println("Kupac vec postoji.");
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
-                    } else {                        
+                    } else {
                         listaKupaca.add(ime);
                         saveKupci(listaKupaca);
                         System.out.println("Kupac " + ime + " uspjesno dodan.");
@@ -563,7 +587,7 @@ public class SistemProdaje {
                         cIn.nextLine();
                     }
                     break;
-                    
+
                 }
                 case "0": {
                     end = true;
@@ -622,7 +646,7 @@ public class SistemProdaje {
             izvjestaj.save();
         }
     }
-    
+
     public final static void cls() {
         try {
             final String os = System.getProperty("os.name");
@@ -654,7 +678,7 @@ public class SistemProdaje {
             f = new File("mjeseci");
             f.mkdir();
         }
-        
+
         if (!GODINE.exists() || !GODINE.isDirectory()) {
             f = new File("godine");
             f.mkdir();
@@ -663,7 +687,15 @@ public class SistemProdaje {
             f = new File("izvjestaji");
             f.mkdir();
         }
-        
+
+        if (!new File("lista_kupaca.ser").exists()) {
+            saveKupci(new ArrayList());
+        }
+
+        if (!new File("lista_radnika.ser").exists()) {
+            saveRadnici(new HashMap());
+        }
+
     }
-    
+
 }

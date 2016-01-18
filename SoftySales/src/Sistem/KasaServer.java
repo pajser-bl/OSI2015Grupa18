@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Sistem;
 
 import Podaci.Proizvod;
@@ -44,16 +39,15 @@ public class KasaServer {
     public KasaServer() {
         cIn = new Scanner(System.in);
 
-//        _listaKupaca=new ArrayList();
-//        SistemProdaje.saveKupci(_listaKupaca);
-//        _listaKupaca=SistemProdaje.readKupci();
-        _listaZahtjeva = new ArrayList();
-        _listaRadnika = SistemProdaje.read();
-        _listaKupaca = SistemProdaje.readKupci();
-        //SistemProdaje.save(_listaRadnika);
-//        inicijalizacija fajlova
+//      inicijalizacija fajlova
         SistemProdaje.fajlSistem();
-//        inicijalizacija threda
+
+        _listaKupaca = SistemProdaje.readKupci();
+        _listaRadnika = SistemProdaje.readRadnici();
+
+        _listaZahtjeva = new ArrayList();
+
+//      inicijalizacija threda
         KasaThread kasaThread = new KasaThread();
         kasaThread.start();
 //        login i rad servera
@@ -72,13 +66,12 @@ public class KasaServer {
                 }
                 case 1: {
                     _cashier = username;
-                    System.out.println("Dobrodosli " + _cashier + ".");
+                    System.out.println("Dobrodosli " + username + ".");
                     loginCheck = true;
                     break;
                 }
                 case 2: {
-                    _cashier = username;
-                    System.out.println("Dobrodosli " + _cashier + ".");
+                    System.out.println("Dobrodosli " + username + ".");
                     adminCheck = true;
                     loginCheck = true;
                     break;
@@ -135,17 +128,17 @@ public class KasaServer {
         BufferedReader in;
         PrintWriter out;
         ObjectInputStream oInS;
+        Socket sock;
         HashMap<Proizvod, Integer> zahtjev;
 
         public KasaSistemThread(Socket sock) {
             try {
+                this.sock=sock;
                 this.in=new BufferedReader(new InputStreamReader(sock.getInputStream()));
                 this.out=new PrintWriter((new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()))),true);
-                this.oInS = new ObjectInputStream(sock.getInputStream());
-            } catch (IOException ex) {
+                } catch (IOException ex) {
                 Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
             }
-
             start();
         }
 
@@ -156,12 +149,16 @@ public class KasaServer {
             try {
                 while(!end){
                     msg=in.readLine();
+                    System.out.println("Adsada");
                     if(_listaKupaca.contains(msg)){
-                        out.write(1);
+                        out.println("1");
                         end=true;
-                    }
+                    }else
+                        out.println("0");
                 }
-                
+                in.close();
+                out.close();
+                this.oInS = new ObjectInputStream(sock.getInputStream());            
                 if ((zahtjev = (HashMap<Proizvod, Integer>) oInS.readObject()) != null) {
                     KasaServer._listaZahtjeva.add(zahtjev);
                     oInS.close();

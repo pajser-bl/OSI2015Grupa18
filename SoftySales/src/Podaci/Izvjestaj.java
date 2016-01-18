@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Podaci;
 
 import java.io.File;
@@ -18,33 +13,31 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author pajser
- */
-public class Izvjestaj implements java.io.Serializable{
+public class Izvjestaj implements java.io.Serializable {
+
     private String _kasir;
     private String _datum;
     private String _tekst;
-    
-    public Izvjestaj(String kasir,String tekst){
-        DateFormat dateFormat=new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
-        Date date=new Date();
-        _datum=dateFormat.format(date);
-        _kasir=kasir;
-        _tekst=tekst;
+
+    public Izvjestaj(String kasir, String tekst) {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
+        Date date = new Date();
+        _datum = dateFormat.format(date);
+        _kasir = kasir;
+        _tekst = tekst;
     }
-    
-    public void print(){
-        
+
+    public void print() {
+
         System.out.println("-------------------");
-        System.out.println("Izvjestaj "+_datum+"\nKasir: "+_kasir+"\n"+_tekst);
+        System.out.println("Izvjestaj " + _datum + "\nKasir: " + _kasir + "\n" + _tekst);
         System.out.println("-------------------");
     }
-    public void save(){
+
+    public void save() {
         try {
-            FileOutputStream fOut = new FileOutputStream("izvjestaji"+File.separator+"I-"+_datum);
-            ObjectOutputStream oOut=new ObjectOutputStream(fOut);
+            FileOutputStream fOut = new FileOutputStream("izvjestaji" + File.separator + "I-" + _datum);
+            ObjectOutputStream oOut = new ObjectOutputStream(fOut);
             oOut.writeObject(this);
             oOut.close();
             fOut.close();
@@ -54,11 +47,12 @@ public class Izvjestaj implements java.io.Serializable{
             Logger.getLogger(Izvjestaj.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    public Izvjestaj read(String lokacija){
+
+    public Izvjestaj read(String lokacija) {
         try {
             FileInputStream fIn = new FileInputStream(lokacija);
-            ObjectInputStream oIn=new ObjectInputStream(fIn);
-            Izvjestaj izvjestaj=(Izvjestaj)oIn.readObject();
+            ObjectInputStream oIn = new ObjectInputStream(fIn);
+            Izvjestaj izvjestaj = (Izvjestaj) oIn.readObject();
             oIn.close();
             fIn.close();
             return izvjestaj;
@@ -69,9 +63,7 @@ public class Izvjestaj implements java.io.Serializable{
             Logger.getLogger(Izvjestaj.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-        
+
     }
-    
-    
-    
-    }
+
+}

@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * @author pajser
  */
 public class KupacKlijent extends Thread{
-    public static final int PORT=9000;
+    public static final int PORT=9001;
     private InetAddress iAddress;
     private BufferedReader in;
     private PrintWriter out;
@@ -52,12 +52,15 @@ public class KupacKlijent extends Thread{
     public boolean logInCheck(){
         try {
             String ime;
+            System.out.printf("Unesite vase ime: ");
             ime=cIn.nextLine();
-            out.write(ime);
-            if(in.read()==1){
+            out.println(ime);
+            String rec=in.readLine();
+            if(rec.equals("1")){
                 _ime=ime;
                 return true;
             }else
+                System.out.println("Nepasdsa");
                 return false;
         } catch (IOException ex) {
             Logger.getLogger(KupacKlijent.class.getName()).log(Level.SEVERE, null, ex);
@@ -67,7 +70,7 @@ public class KupacKlijent extends Thread{
     @Override
     public void run () {
         while(!logOnCheck){
-            System.out.printf("Da li ste privilegovani kupac?[Da/Ne]");
+            System.out.printf("Da li ste privilegovani kupac?[Da/Ne]:");
             if(cIn.nextLine().toLowerCase().equals("da")){
                 if(logInCheck()){
                     System.out.println("Autorizacija uspjesna.");
@@ -76,10 +79,11 @@ public class KupacKlijent extends Thread{
                     logOnCheck=true;
                 }
             }else if(cIn.nextLine().toLowerCase().equals("ne")){
-                out.write("0");
+                out.println("0");
                 logOnCheck=true;
             }
         }
+        
     }
     public static void main(String args[]){
         KupacKlijent kk=new KupacKlijent();
