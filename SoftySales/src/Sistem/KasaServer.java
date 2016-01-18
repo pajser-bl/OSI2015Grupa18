@@ -192,7 +192,6 @@ public class KasaServer {
                         temp=(_inventar.get(p)-zahtjev.get(p));
                         _inventar.remove(p);
                         _inventar.put(p, temp);
-                        System.out.println(temp+" "+_inventar.get(p));
                     }
                     SistemProdaje.saveInventar(_inventar);
                     _inventar=SistemProdaje.readInventar();
