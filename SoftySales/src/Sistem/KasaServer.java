@@ -41,7 +41,7 @@ public class KasaServer {
         _listaRadnika = SistemProdaje.readRadnici();
 
         _listaZahtjeva = new ArrayList();
-        
+
 //      inicijalizacija threda
         KasaThread kasaThread = new KasaThread();
         kasaThread.start();

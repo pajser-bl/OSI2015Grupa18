@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
 public class SistemProdaje {
 
     public static final File RACUNI = new File("racuni");
@@ -35,11 +34,11 @@ public class SistemProdaje {
     public static final File MJESECI = new File("mjeseci");
     public static final File GODINE = new File("godine");
     public static final File IZVJESTAJI = new File("izvjestaji");
-    
+
     public static String sha256(String password) {
-        
+
         String _pwd = "";
-        
+
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes("UTF-8"));
@@ -57,18 +56,18 @@ public class SistemProdaje {
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
             Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return _pwd;
     }
-    
+
     public static Integer loginCheck(String username, String password, HashMap<String, String> listaKorisnika) {
         if (username.equals("EXIT".toLowerCase()) || password.equals("EXIT".toLowerCase())) {
             return 0;
         }
         if (listaKorisnika.containsKey(username)) {
-            
+
             String _pwd = sha256(password);
-            
+
             if (listaKorisnika.get(username).equals(_pwd) && username.equals("admin")) {
                 return 2;
             }
@@ -93,7 +92,7 @@ public class SistemProdaje {
         } catch (IOException ex) {
             Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }    
+    }
 
     public static HashMap<String, String> readRadnici() {
         try {
@@ -164,9 +163,9 @@ public class SistemProdaje {
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
-            
+
             opcije = Integer.parseInt(cIn.nextLine());
-            
+
             switch (opcije) {
                 case 1: {
                     cls();
@@ -243,7 +242,7 @@ public class SistemProdaje {
                         cIn.nextLine();
                         break;
                     }
-                    
+
                 }
                 case "3": {
                     cls();
@@ -385,7 +384,7 @@ public class SistemProdaje {
                                 break;
                             }
                             default:
-                        }                        
+                        }
                     }
                     break;
                 }
@@ -416,7 +415,7 @@ public class SistemProdaje {
                                 break;
                             }
                             default:
-                        }                        
+                        }
                     }
                     break;
                 }
@@ -426,7 +425,7 @@ public class SistemProdaje {
                 }
                 default:
             }
-            
+
         }
     }
 
@@ -442,7 +441,7 @@ public class SistemProdaje {
 //        podaci o vremenu
         String pocetakRada = dateFormat.format(date);
         String krajRada;
-        
+
         while (!end) {
             cls();
             System.out.println("Radnik: " + kasir + " .");
@@ -464,7 +463,7 @@ public class SistemProdaje {
                         cIn.nextLine();
                     } else {
 //                        sistem kupovine
-                        
+
                     }
                     break;
                 }
@@ -529,7 +528,7 @@ public class SistemProdaje {
                         System.out.println("Kupac vec postoji.");
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
-                    } else {                        
+                    } else {
                         listaKupaca.add(ime);
                         saveKupci(listaKupaca);
                         System.out.println("Kupac " + ime + " uspjesno dodan.");
@@ -588,7 +587,7 @@ public class SistemProdaje {
                         cIn.nextLine();
                     }
                     break;
-                    
+
                 }
                 case "0": {
                     end = true;
@@ -647,7 +646,7 @@ public class SistemProdaje {
             izvjestaj.save();
         }
     }
-    
+
     public final static void cls() {
         try {
             final String os = System.getProperty("os.name");
@@ -679,7 +678,7 @@ public class SistemProdaje {
             f = new File("mjeseci");
             f.mkdir();
         }
-        
+
         if (!GODINE.exists() || !GODINE.isDirectory()) {
             f = new File("godine");
             f.mkdir();
@@ -688,15 +687,15 @@ public class SistemProdaje {
             f = new File("izvjestaji");
             f.mkdir();
         }
-        
+
         if (!new File("lista_kupaca.ser").exists()) {
             saveKupci(new ArrayList());
         }
-        
+
         if (!new File("lista_radnika.ser").exists()) {
             saveRadnici(new HashMap());
         }
-        
+
     }
-    
+
 }
