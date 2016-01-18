@@ -29,10 +29,10 @@ public class KasaServer {
     private Scanner cIn;
 //    podaci o radnicima i administratoru
     private static HashMap<String, String> _listaRadnika;
-    private static HashMap<Proizvod,Integer> _inventar;
+    private static HashMap<Proizvod, Integer> _inventar;
     private static ArrayList<String> _listaKupaca;
     private static ArrayList<HashMap<Proizvod, Integer>> _listaZahtjeva;
-    
+
     public String getCashier() {
         return _cashier;
     }
@@ -45,7 +45,7 @@ public class KasaServer {
 
         _listaKupaca = SistemProdaje.readKupci();
         _listaRadnika = SistemProdaje.readRadnici();
-
+        _inventar = SistemProdaje.readInventar();
         _listaZahtjeva = new ArrayList();
 
 //      inicijalizacija threda
@@ -85,7 +85,7 @@ public class KasaServer {
         if (adminCheck) {
             SistemProdaje.adminMeni(_listaRadnika);
         } else {
-            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva,_inventar;
+            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva, _inventar);
         }
     }
 
@@ -126,6 +126,7 @@ public class KasaServer {
     }
 
     public static class KasaSistemThread extends Thread {
+
         BufferedReader in;
         PrintWriter out;
         ObjectInputStream oInS;
@@ -134,10 +135,10 @@ public class KasaServer {
 
         public KasaSistemThread(Socket sock) {
             try {
-                this.sock=sock;
-                this.in=new BufferedReader(new InputStreamReader(sock.getInputStream()));
-                this.out=new PrintWriter((new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()))),true);
-                } catch (IOException ex) {
+                this.sock = sock;
+                this.in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+                this.out = new PrintWriter((new BufferedWriter(new OutputStreamWriter(sock.getOutputStream()))), true);
+            } catch (IOException ex) {
                 Logger.getLogger(KasaServer.class.getName()).log(Level.SEVERE, null, ex);
             }
             start();
@@ -145,21 +146,22 @@ public class KasaServer {
 
         @Override
         public void run() {
-            boolean end=false;
+            boolean end = false;
             String msg;
             try {
-                while(!end){
-                    msg=in.readLine();
+                while (!end) {
+                    msg = in.readLine();
                     System.out.println("Adsada");
-                    if(_listaKupaca.contains(msg)){
+                    if (_listaKupaca.contains(msg)) {
                         out.println("1");
-                        end=true;
-                    }else
+                        end = true;
+                    } else {
                         out.println("0");
+                    }
                 }
                 in.close();
                 out.close();
-                this.oInS = new ObjectInputStream(sock.getInputStream());            
+                this.oInS = new ObjectInputStream(sock.getInputStream());
                 if ((zahtjev = (HashMap<Proizvod, Integer>) oInS.readObject()) != null) {
                     KasaServer._listaZahtjeva.add(zahtjev);
                     oInS.close();
