@@ -695,11 +695,13 @@ public class SistemProdaje {
         }
 
         if (!new File("lista_kupaca.ser").exists()) {
-            saveKupci(new ArrayList());
+            ArrayList<String> list = new ArrayList();
+            saveKupci(list);
         }
 
         if (!new File("lista_radnika.ser").exists()) {
-            saveRadnici(new HashMap());
+            HashMap<String, String> hm = new HashMap();
+            saveRadnici(hm);
         }
     }
 
