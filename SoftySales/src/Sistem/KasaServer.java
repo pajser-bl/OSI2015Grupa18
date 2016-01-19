@@ -4,6 +4,7 @@ import Podaci.Proizvod;
 import Podaci.Racun;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +68,13 @@ public class KasaServer {
             System.out.printf("Korisnicko ime: ");
             String username = cIn.nextLine();
             System.out.printf("Sifra:");
-            String password = cIn.nextLine();
+            Console console = System.console();
+            String password;
+            if (console != null)
+                password = String.valueOf(console.readPassword());
+            else
+                password = cIn.nextLine();
+            
             switch (SistemProdaje.loginCheck(username, password, _listaRadnika)) {
                 case -1: {
                     System.out.println("Pogresni podaci.");
