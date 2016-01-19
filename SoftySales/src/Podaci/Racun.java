@@ -121,11 +121,11 @@ public class Racun implements java.io.Serializable {
             System.out.println("Kupac: " + _buyer);
         }
         for (Proizvod i : _lista.keySet()) {
-            String proizvod = i.getNaziv();
             String kolicina = _lista.get(i).toString();
-            System.out.println(proizvod + " x" + kolicina);
+            i.print();
+            System.out.printf(" x%s\n", "x", kolicina);
         }
-        System.out.println("SUM: " + _sum + "KM");
+        System.out.printf("SUM:%.2fKM\n", _sum);
         System.out.println("--------------");
     }
 

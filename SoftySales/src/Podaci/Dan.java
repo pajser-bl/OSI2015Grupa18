@@ -36,24 +36,26 @@ public class Dan implements java.io.Serializable {
     public void setSum(int sum) {
         _sum = sum;
     }
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return _listaRacuna.isEmpty();
     }
+
     public Dan() {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Date date = new Date();
         this._datum = dateFormat.format(date);
         this._listaRacuna = new ArrayList<>();
-        this.statistika=new Statistika();
+        this.statistika = new Statistika();
         this._sum = 0;
     }
 
     public void add(Racun racun) {
         _listaRacuna.add(racun);
-        Integer t=0;
-        for(Proizvod p:racun._lista.keySet()){
-            t=racun._lista.get(p);
-            statistika.add(p,t);
+        Integer t = 0;
+        for (Proizvod p : racun._lista.keySet()) {
+            t = racun._lista.get(p);
+            statistika.add(p, t);
         }
         _sum += racun.getSum();
     }
@@ -93,6 +95,7 @@ public class Dan implements java.io.Serializable {
     public void print() {
         System.out.println("==============");
         System.out.println("Racuni za " + _datum + " .");
+        System.out.println("==============");
         for (Racun r : _listaRacuna) {
             r.print();
         }
@@ -103,6 +106,7 @@ public class Dan implements java.io.Serializable {
     public static void print(Dan dan) {
         System.out.println("==============");
         System.out.println("Racuni za " + dan._datum + " .");
+        System.out.println("==============");
         for (Racun r : dan._listaRacuna) {
             r.print();
         }

@@ -80,8 +80,7 @@ public class Proizvod implements java.io.Serializable {
 
     //print za racun
     public void print() {
-        System.out.format("%08d", _sifra);
-        System.out.print(" " + _naziv + " " + _cijena);
+        System.out.printf("%08d %s %.2fKM", _sifra, _naziv, _cijena);
     }
 
     //za modifikaciju i unos novih proizvoda

@@ -35,9 +35,9 @@ public class Godina implements java.io.Serializable {
     }
 
     public Godina(String godina) {
-        _godina=godina;
-        statistika=new Statistika();
-        _listaMjeseci=new ArrayList<>();
+        _godina = godina;
+        statistika = new Statistika();
+        _listaMjeseci = new ArrayList<>();
         _sum = 0;
     }
 
@@ -82,6 +82,7 @@ public class Godina implements java.io.Serializable {
     public void print() {
         System.out.println("==============");
         System.out.println("Racuni za " + _godina + " .");
+        System.out.println("==============");
         for (Mjesec r : _listaMjeseci) {
             r.print();
         }
@@ -92,13 +93,15 @@ public class Godina implements java.io.Serializable {
     public static void print(Godina godina) {
         System.out.println("==============");
         System.out.println("Racuni za " + godina + " .");
+        System.out.println("==============");
         for (Mjesec r : godina._listaMjeseci) {
             r.print();
         }
         System.out.println("TOTAL YEARLY SUM:" + godina._sum);
         System.out.println("==============");
     }
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return _listaMjeseci.isEmpty();
     }
 }

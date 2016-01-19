@@ -48,7 +48,7 @@ public class Sedmica implements java.io.Serializable {
     public Sedmica() {
         this._listaDana = new ArrayList<Dan>();
         this._sum = 0;
-        this.statistika=new Statistika();
+        this.statistika = new Statistika();
     }
 
     public void save() {
@@ -92,6 +92,7 @@ public class Sedmica implements java.io.Serializable {
     public void print() {
         System.out.println("==============");
         System.out.println("Racuni od " + _startDate + " do " + _endDate + " .");
+        System.out.println("==============");
         for (Dan r : _listaDana) {
             r.print();
         }
@@ -102,13 +103,15 @@ public class Sedmica implements java.io.Serializable {
     public static void print(Sedmica sedmica) {
         System.out.println("==============");
         System.out.println("Racuni od " + sedmica._startDate + " do " + sedmica._endDate + " .");
+        System.out.println("==============");
         for (Dan r : sedmica._listaDana) {
             r.print();
         }
         System.out.println("TOTAL WEEKLY SUM:" + sedmica._sum);
         System.out.println("==============");
     }
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return _listaDana.isEmpty();
     }
 }

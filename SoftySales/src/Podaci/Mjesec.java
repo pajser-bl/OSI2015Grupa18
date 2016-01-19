@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Mjesec implements java.io.Serializable {
+
     private String _godina;
     private String _mjesec;
     private double _sum;
@@ -36,8 +37,8 @@ public class Mjesec implements java.io.Serializable {
         this._sum = _sum;
     }
 
-    public Mjesec(int brojMjeseca,String godina) {
-        this._godina=godina;
+    public Mjesec(int brojMjeseca, String godina) {
+        this._godina = godina;
         switch (brojMjeseca) {
             case 1:
                 this._mjesec = "Januar";
@@ -78,19 +79,19 @@ public class Mjesec implements java.io.Serializable {
         }
         this._listaDana = new ArrayList<Dan>();
         this._sum = 0;
-        this.statistika=new Statistika();
+        this.statistika = new Statistika();
     }
 
     public void add(Dan dan) {
         _listaDana.add(dan);
-        Double t=dan.getSum();
+        Double t = dan.getSum();
         _sum += t;
         statistika.addStatistika(dan.statistika);
     }
 
     public void save() {
         try {
-            FileOutputStream fOut = new FileOutputStream("mjeseci" + File.separator + "M-" + _mjesec+"."+_godina+".ser");
+            FileOutputStream fOut = new FileOutputStream("mjeseci" + File.separator + "M-" + _mjesec + "." + _godina + ".ser");
             ObjectOutputStream oOut = new ObjectOutputStream(fOut);
             oOut.writeObject(this);
             fOut.close();
@@ -123,6 +124,7 @@ public class Mjesec implements java.io.Serializable {
     public void print() {
         System.out.println("==============");
         System.out.println("Racuni za " + _mjesec + " .");
+        System.out.println("==============");
         for (Dan r : _listaDana) {
             r.print();
         }
@@ -133,13 +135,15 @@ public class Mjesec implements java.io.Serializable {
     public static void print(Mjesec mjesec) {
         System.out.println("==============");
         System.out.println("Racuni za " + mjesec._mjesec + " .");
+        System.out.println("==============");
         for (Dan r : mjesec._listaDana) {
             r.print();
         }
         System.out.println("TOTAL MONTHLY SUM:" + mjesec._sum);
         System.out.println("==============");
     }
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return _listaDana.isEmpty();
     }
 }

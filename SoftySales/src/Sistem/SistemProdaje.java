@@ -230,7 +230,7 @@ public class SistemProdaje {
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
 
-            switch (Integer.parseInt(cIn.nextLine())) {
+            switch (optionChooser(cIn.nextLine())) {
                 case 1: {
                     cls();
                     upravljanjeNalozima(lista);
@@ -274,7 +274,7 @@ public class SistemProdaje {
             System.out.println("-------------------");
             System.out.printf("[1/2/3/4/0]: ");
 
-            switch (Integer.parseInt(cIn.nextLine())) {
+            switch (optionChooser(cIn.nextLine())) {
                 case 1: {
                     cls();
                     System.out.println("-------------------");
@@ -381,7 +381,7 @@ public class SistemProdaje {
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
 
-            switch (Integer.parseInt(cIn.nextLine())) {
+            switch (optionChooser(cIn.nextLine())) {
                 case 1: {
                     boolean endPodmeni = false;
                     while (!endPodmeni) {
@@ -397,7 +397,7 @@ public class SistemProdaje {
                         System.out.println("-------------------");
                         System.out.printf("[1/2/3/4/5/0]: ");
 
-                        switch (Integer.parseInt(cIn.nextLine())) {
+                        switch (optionChooser(cIn.nextLine())) {
                             case 1: {
                                 File dani = new File("dani");
                                 File[] files = dani.listFiles();
@@ -520,7 +520,7 @@ public class SistemProdaje {
                         System.out.println("0. Nazad");
                         System.out.println("-------------------");
                         System.out.printf("[1/2/3/4/0]: ");
-                        switch (Integer.parseInt(cIn.nextLine())) {
+                        switch (optionChooser(cIn.nextLine())) {
                             case 1: {
                                 boolean endPodmeniPodmeni=false;
                                 while(!endPodmeniPodmeni){
@@ -531,7 +531,7 @@ public class SistemProdaje {
                                     System.out.println("0. Nazad");
                                     System.out.println("-------------------");
                                     System.out.printf("[1/2/0]: ");
-                                    switch(Integer.parseInt(cIn.nextLine())){
+                                    switch(optionChooser(cIn.nextLine())){
                                         case 1:{
                                             File dani = new File("dani");
                                             File[] files = dani.listFiles();
@@ -595,7 +595,7 @@ public class SistemProdaje {
                                     System.out.println("0. Nazad");
                                     System.out.println("-------------------");
                                     System.out.printf("[1/2/0]: ");
-                                    switch(Integer.parseInt(cIn.nextLine())){
+                                    switch(optionChooser(cIn.nextLine())){
                                         case 1:{
                                             File sedmice = new File("sedmice");
                                             File[] files = sedmice.listFiles();
@@ -659,7 +659,7 @@ public class SistemProdaje {
                                     System.out.println("0. Nazad");
                                     System.out.println("-------------------");
                                     System.out.printf("[1/2/0]: ");
-                                    switch(Integer.parseInt(cIn.nextLine())){
+                                    switch(optionChooser(cIn.nextLine())){
                                         case 1:{
                                             File mjeseci = new File("mjeseci");
                                             File[] files = mjeseci.listFiles();
@@ -723,7 +723,7 @@ public class SistemProdaje {
                                     System.out.println("0. Nazad");
                                     System.out.println("-------------------");
                                     System.out.printf("[1/2/0]: ");
-                                    switch(Integer.parseInt(cIn.nextLine())){
+                                    switch(optionChooser(cIn.nextLine())){
                                         case 1:{
                                             File godine = new File("godine");
                                             File[] files = godine.listFiles();
@@ -834,7 +834,7 @@ public class SistemProdaje {
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
             System.out.printf("[1/2/3/4/0]: ");
-            switch (Integer.parseInt(cIn.nextLine())) {
+            switch (optionChooser(cIn.nextLine())) {
                 case 1: {
                     cls();
                     if (listaZahtjeva.isEmpty()) {
@@ -891,7 +891,7 @@ public class SistemProdaje {
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
             System.out.printf("[1/2/3/0]: ");
-            switch (Integer.parseInt(cIn.nextLine())) {
+            switch (optionChooser(cIn.nextLine())) {
                 case 1: {
                     if (listaKupaca.isEmpty()) {
                         System.out.println("Lista kupaca je prazna.");
@@ -1000,7 +1000,7 @@ public class SistemProdaje {
             System.out.println("4. Uklanjanje proizvoda.");
             System.out.println("0. Nazad.");
             System.out.println("-------------------");
-            switch (Integer.parseInt(cIn.nextLine())) {
+            switch (optionChooser(cIn.nextLine())) {
                 case 1: {
                     if (inventar.isEmpty()) {
                         System.out.println("Lista proizvoda je prazna.");
@@ -1128,7 +1128,7 @@ public class SistemProdaje {
             System.out.println("4. Godinu.");
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
-            switch (Integer.parseInt(cIn.nextLine())) {
+            switch (optionChooser(cIn.nextLine())) {
                 case 1: {
                     System.out.println("Za koji dan zelite da napravite izvjestaj?[dd.MM.yyyy]:");
                     String regEx=cIn.nextLine();
@@ -1361,5 +1361,10 @@ public class SistemProdaje {
         String toAdd = "[ " + datum + " ] " + cashier + ": < " + sTime + " | " + eTime + " >\n";
         String ss = statistikaKoristenja + toAdd;
         saveStatistikaKoristenja(ss);
+    }
+    public static int optionChooser(String nextLine){
+        if(nextLine.equals(""))
+            return 100;
+        return Integer.parseInt(nextLine);
     }
 }

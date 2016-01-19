@@ -42,10 +42,10 @@ public class KasaServer {
 
         _listaKupaca = SistemProdaje.readKupci();
         _listaRadnika = SistemProdaje.readRadnici();
-        _statistikaKoristenja=SistemProdaje.readStatistikaKoristenja();
+        _statistikaKoristenja = SistemProdaje.readStatistikaKoristenja();
         _inventar = SistemProdaje.readInventar();
         _listaZahtjeva = new ArrayList();
-        
+
 //      inicijalizacija threda
         KasaThread kasaThread = new KasaThread();
         kasaThread.start();
@@ -60,11 +60,12 @@ public class KasaServer {
             System.out.printf("Sifra:");
             Console console = System.console();
             String password;
-            if (console != null)
+            if (console != null) {
                 password = String.valueOf(console.readPassword());
-            else
+            } else {
                 password = cIn.nextLine();
-            
+            }
+
             switch (SistemProdaje.loginCheck(username, password, _listaRadnika)) {
                 case -1: {
                     System.out.println("Pogresni podaci.");
@@ -90,9 +91,9 @@ public class KasaServer {
         if (adminCheck) {
             SistemProdaje.adminMeni(_listaRadnika);
         } else {
-            _startTime=SistemProdaje.time();
-            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva, _inventar,_startTime);
-            
+            _startTime = SistemProdaje.time();
+            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva, _inventar, _startTime);
+
         }
     }
 
@@ -166,30 +167,31 @@ public class KasaServer {
                         out.writeObject("EXIT");
                         end = true;
                         name = "no_name";
-                    }else 
+                    } else {
                         out.writeObject("DENIED");
+                    }
                 }
 
 //                salje inventar
                 out.writeObject(_inventar);
                 HashMap<Proizvod, Integer> zahtjev;
-                
+
 //              prima zahtjev
                 String t;
-                t=(String)in.readObject();
-                if(t.equals("kupovina")){
+                t = (String) in.readObject();
+                if (t.equals("kupovina")) {
                     out.writeObject("accepted");
                     zahtjev = (HashMap<Proizvod, Integer>) in.readObject();
                     Racun racun = new Racun(getCashier(), name);
                     int temp;
                     for (Proizvod p : zahtjev.keySet()) {
                         racun.add(p, zahtjev.get(p));
-                        temp=(_inventar.get(p)-zahtjev.get(p));
+                        temp = (_inventar.get(p) - zahtjev.get(p));
                         _inventar.remove(p);
                         _inventar.put(p, temp);
                     }
                     SistemProdaje.saveInventar(_inventar);
-                    _inventar=SistemProdaje.readInventar();
+                    _inventar = SistemProdaje.readInventar();
 //                  salje racun
                     KasaServer._listaZahtjeva.add(racun);
                     out.writeObject(racun);
