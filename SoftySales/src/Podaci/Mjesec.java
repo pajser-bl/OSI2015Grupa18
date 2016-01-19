@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Mjesec implements java.io.Serializable {
-
+    private String _godina;
     private String _mjesec;
     private double _sum;
     private ArrayList<Dan> _listaDana;
@@ -39,11 +39,12 @@ public class Mjesec implements java.io.Serializable {
         this._sum = _sum;
     }
 
-    public Mjesec() {
-        DateFormat dateFormat = new SimpleDateFormat("MM");
-        Date date = new Date();
-        Integer temp = Integer.valueOf(dateFormat.format(date));
-        switch (temp) {
+    public Mjesec(int brojMjeseca,String godina) {
+//        DateFormat dateFormat = new SimpleDateFormat("MM");
+//        Date date = new Date();
+//        Integer temp = Integer.valueOf(dateFormat.format(date));
+        this._godina=godina;
+        switch (brojMjeseca) {
             case 1:
                 this._mjesec = "Januar";
                 break;
@@ -93,7 +94,7 @@ public class Mjesec implements java.io.Serializable {
 
     public void save() {
         try {
-            FileOutputStream fOut = new FileOutputStream("mjeseci" + File.separator + "M-" + _mjesec + ".ser");
+            FileOutputStream fOut = new FileOutputStream("mjeseci" + File.separator + "M-" + _mjesec+"."+_godina+".ser");
             ObjectOutputStream oOut = new ObjectOutputStream(fOut);
             oOut.writeObject(this);
             fOut.close();
@@ -142,5 +143,7 @@ public class Mjesec implements java.io.Serializable {
         System.out.println("TOTAL MONTHLY SUM:" + mjesec._sum);
         System.out.println("==============");
     }
-
+    public boolean isEmpty(){
+        return _listaDana.isEmpty();
+    }
 }

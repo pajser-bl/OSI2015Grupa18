@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -127,6 +128,44 @@ public class Racun implements java.io.Serializable {
         }
         System.out.println("SUM: " + _sum + "KM");
         System.out.println("--------------");
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + Objects.hashCode(this._time);
+        hash = 17 * hash + (int) (Double.doubleToLongBits(this._sum) ^ (Double.doubleToLongBits(this._sum) >>> 32));
+        hash = 17 * hash + Objects.hashCode(this._cashier);
+        hash = 17 * hash + Objects.hashCode(this._buyer);
+        hash = 17 * hash + Objects.hashCode(this._lista);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Racun other = (Racun) obj;
+        if (Double.doubleToLongBits(this._sum) != Double.doubleToLongBits(other._sum)) {
+            return false;
+        }
+        if (!Objects.equals(this._time, other._time)) {
+            return false;
+        }
+        if (!Objects.equals(this._cashier, other._cashier)) {
+            return false;
+        }
+        if (!Objects.equals(this._buyer, other._buyer)) {
+            return false;
+        }
+        return Objects.equals(this._lista, other._lista);
     }
 
 }

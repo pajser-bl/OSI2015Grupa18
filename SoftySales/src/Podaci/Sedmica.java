@@ -54,12 +54,12 @@ public class Sedmica implements java.io.Serializable {
     }
 
     public void save() {
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        Date startDate = new Date();
-        Date endDate = new Date();
-        startDate.setTime(endDate.getTime() - 604800000);//minus 7 dana.
-        _startDate = dateFormat.format(startDate);
-        _endDate = dateFormat.format(endDate);
+//        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+//        Date startDate = new Date();
+//        Date endDate = new Date();
+//        startDate.setTime(endDate.getTime() - 604800000);//minus 7 dana.
+//        _startDate = dateFormat.format(startDate);
+//        _endDate = dateFormat.format(endDate);
         try {
             FileOutputStream fOut = new FileOutputStream("sedmice" + File.separator + "S-" + _startDate + "-" + _endDate + ".ser");
             ObjectOutputStream oOut = new ObjectOutputStream(fOut);
@@ -116,5 +116,7 @@ public class Sedmica implements java.io.Serializable {
         System.out.println("TOTAL WEEKLY SUM:" + sedmica._sum);
         System.out.println("==============");
     }
-
+    public boolean isEmpty(){
+        return _listaDana.isEmpty();
+    }
 }

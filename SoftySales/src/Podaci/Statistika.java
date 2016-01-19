@@ -4,21 +4,17 @@ import java.util.HashMap;
 
 public class Statistika implements java.io.Serializable {
 
-    protected HashMap<Proizvod, Integer> _listaProizvoda;
+    public HashMap<Proizvod, Integer> _listaProizvoda;
 
-//   Za dodavanje novih proizvoda u statistiku tokom dodavanja proizvoda u
-//   sistem.
-    public void addToList(Proizvod proizvod) {
-        if (_listaProizvoda.containsKey(proizvod)) {
-            _listaProizvoda.put(proizvod, 0);
-        }
+    public Statistika(){
+        _listaProizvoda=new HashMap<>();
     }
-
-    public void add(Proizvod proizvod, int kolicina) {
+    public void add(Proizvod proizvod, Integer kolicina) {
         if (_listaProizvoda.containsKey(proizvod)) {
-            _listaProizvoda.put(proizvod, _listaProizvoda.get(proizvod) + kolicina);
+            Integer t=_listaProizvoda.get(proizvod)+kolicina;
+            _listaProizvoda.remove(proizvod);
+            _listaProizvoda.put(proizvod, t);
         } else {
-            this.addToList(proizvod);
             _listaProizvoda.put(proizvod, kolicina);
         }
     }
@@ -32,7 +28,7 @@ public class Statistika implements java.io.Serializable {
     }
 
     public int getCoeficient(Proizvod proizvod) {
-        return (int) _listaProizvoda.get(proizvod);
+        return (Integer) _listaProizvoda.get(proizvod);
     }
 
     public void addStatistika(Statistika statistika) {

@@ -19,7 +19,7 @@ public class Dan implements java.io.Serializable {
     private String _datum;
     private double _sum;
     private ArrayList<Racun> _listaRacuna;
-    protected Statistika statistika;
+    public Statistika statistika;
 
     public String getDatum() {
         return _datum;
@@ -36,17 +36,25 @@ public class Dan implements java.io.Serializable {
     public void setSum(int sum) {
         _sum = sum;
     }
-
+    public boolean isEmpty(){
+        return _listaRacuna.isEmpty();
+    }
     public Dan() {
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Date date = new Date();
         this._datum = dateFormat.format(date);
         this._listaRacuna = new ArrayList<>();
+        this.statistika=new Statistika();
         this._sum = 0;
     }
 
     public void add(Racun racun) {
         _listaRacuna.add(racun);
+        Integer t=0;
+        for(Proizvod p:racun._lista.keySet()){
+            t=racun._lista.get(p);
+            statistika.add(p,t);
+        }
         _sum += racun.getSum();
     }
 

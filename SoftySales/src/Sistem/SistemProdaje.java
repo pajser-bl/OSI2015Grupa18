@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 
 public class SistemProdaje {
 
@@ -512,18 +514,55 @@ public class SistemProdaje {
                     while (!endPodmeni) {
                         cls();
                         System.out.println("-------------------");
-                        System.out.println("Pregled statistike:");
-                        System.out.println("1. Pojedinacnog proizvoda.");
-                        System.out.println("2. Svih proizvoda.");
-                        System.out.println("0. Nazad");
+                        System.out.println("Pregled statistike za:");
+                        System.out.println("1. Dan.");
+                        System.out.println("2. Mjesec.");
+                        System.out.println("3. Mjesec.");
+                        System.out.println("4. Godina.");
+                        System.out.println("0.");
                         System.out.println("-------------------");
-                        System.out.printf("[1/2/0]: ");
+                        System.out.printf("[1/2/3/4/0]: ");
                         switch (Integer.parseInt(cIn.nextLine())) {
                             case 1: {
-                                System.out.println("Unesite sifru proizvoda:");
-                                String proizvod = cIn.nextLine();
-                                File godina = new File("godine");
-                                File godine[] = godina.listFiles();
+                                boolean endPodmeniPodmeni=false;
+                                while(!endPodmeniPodmeni){
+                                    cls();
+                                    System.out.println("-------------------");
+                                    System.out.println("1. Pregled pojedinacne statistike:");
+                                    System.out.println("2. Pregled uopstene statistike:");
+                                    System.out.println("-------------------");
+                                    System.out.printf("[1/2/0]: ");
+                                    switch(Integer.parseInt(cIn.nextLine())){
+                                        case 1:{
+                                            cls();
+                                            File dani=new File("dani");
+                                            File files[]=dani.listFiles();
+                                            System.out.println("Statistika za dan:[dd.MM.yyyy]");
+                                            String regEx=cIn.nextLine();
+                                            Dan dan=new Dan();
+                                            System.out.printf("Ime trazenog proizvoda: ");
+                                            String proizvod=cIn.nextLine();
+                                            for(File f:files){
+                                                if(f.getName().contains(regEx))
+                                                    dan=Dan.read(f.getPath());
+                                                    for(Proizvod p:dan.statistika._listaProizvoda.keySet()){
+                                                        if(p.getNaziv().equals(proizvod))
+                                                            System.out.println("x"+dan.statistika.getCoeficient(p));
+                                                            System.out.println("Sum:"+dan.statistika._listaProizvoda.get(p)*p.getCijena());
+                                                        }
+                                            }
+                                            break;
+                                        }
+                                        case 2:{
+                                            break;
+                                        }
+                                        case 0:{
+                                            endPodmeniPodmeni=true;
+                                            break;
+                                        }
+                                        default:
+                                    }
+                                }
                                 break;
                             }
                             case 2: {
@@ -867,7 +906,6 @@ public class SistemProdaje {
 
     public static void pravljenjeIzvjestaja(String kasir) {
         Scanner cIn = new Scanner(System.in);
-        String opcija;
         boolean end = false;
         while (!end) {
             cls();
@@ -881,19 +919,142 @@ public class SistemProdaje {
             System.out.println("-------------------");
             switch (Integer.parseInt(cIn.nextLine())) {
                 case 1: {
-                    opcija = "DAN";
+                    System.out.println("Za koji dan zelite da napravite izvjestaj?[dd.MM.yyyy]:");
+                    String regEx=cIn.nextLine();
+                    File racuni=new File("racuni");
+                    Dan dan=new Dan();
+                    File files[];
+                    for(File f:racuni.listFiles()){
+                        if(f.getName().contains(regEx)){
+                        Racun r=Racun.read(f.getPath());
+                        dan.add(r);
+                        }
+                    }
+                    if(dan.isEmpty()){
+                        System.out.println("Nema racuna za taj dan.");
+                    }else{
+                        dan.save();
+                        System.out.println("Izvjestaj za "+dan.getDatum()+" napravljen.");
+                    }
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
                     break;
                 }
                 case 2: {
-                    opcija = "SEDMICA";
-                    break;
+                    try {
+                        System.out.println("Unesite prvi dan sedmice.[dd.MM.yyyy]:");
+                        String regEx=cIn.nextLine();
+                        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                        Date date=dateFormat.parse(regEx);
+
+                        String date0,date1,date2,date3,date4,date5,date6;
+                        date0 = regEx;
+                        date1 = dateFormat.format(new Date(date.getTime()+8640000));
+                        date2 = dateFormat.format(new Date(date.getTime()+2*8640000));
+                        date3 = dateFormat.format(new Date(date.getTime()+3*8640000));
+                        date4 = dateFormat.format(new Date(date.getTime()+4*8640000));
+                        date5 = dateFormat.format(new Date(date.getTime()+5*8640000));
+                        date6 = dateFormat.format(new Date(date.getTime()+6*8640000));
+                        
+                        File dani=new File("dani");
+                        Sedmica sedmica=new Sedmica();
+                        File files[];
+                        for(File f:dani.listFiles()){
+                            if(f.getName().contains(date0)){
+                                Dan d=Dan.read(f.getPath());
+                                sedmica.add(d);
+                            }
+                            if(f.getName().contains(date1)){
+                                Dan d=Dan.read(f.getPath());
+                                sedmica.add(d);
+                            }
+                            if(f.getName().contains(date2)){
+                            Dan d=Dan.read(f.getPath());
+                                sedmica.add(d);
+                            }
+                            if(f.getName().contains(date3)){
+                                Dan d=Dan.read(f.getPath());
+                                sedmica.add(d);
+                            }
+                            if(f.getName().contains(date4)){
+                                Dan d=Dan.read(f.getPath());
+                                sedmica.add(d);
+                            }
+                            if(f.getName().contains(date5)){
+                                Dan d=Dan.read(f.getPath());
+                                sedmica.add(d);}
+                            if(f.getName().contains(date6)){
+                                Dan d=Dan.read(f.getPath());
+                                sedmica.add(d);
+                            }
+                        }
+                        if(sedmica.isEmpty()){
+                            System.out.println("Nema dana za tu sedmicu.");
+                        }else{
+                            sedmica.setStartDate(date0);
+                            sedmica.setEndDate(date6);
+                            sedmica.save();
+                            System.out.println("Izvjestaj za "+sedmica.getStartDate()+"-"+sedmica.getEndDate()+" napravljen.");
+                        }   
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                        break;
+                    } catch (ParseException ex) {
+                        Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                break;
                 }
                 case 3: {
-                    opcija = "MJESEC";
+                    System.out.println("Unesite broj mjeseca i godinu.[MM.yyyy]:");
+                    String regEx=cIn.nextLine();
+                    File dani=new File("dani");
+                    String s[]=regEx.split(".");
+                    if(s.length!=2){
+                        System.out.println("Nema dana za taj mjesec.");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                        break;
+                    }
+                    int brMjesec=Integer.parseInt(s[0]);
+                    String godina=s[1];
+                    Mjesec mjesec=new Mjesec(brMjesec,godina);
+                    File files[];
+                    for(File f:dani.listFiles()){
+                        if(f.getName().contains(regEx)){
+                            Dan d=Dan.read(f.getPath());
+                            mjesec.add(d);
+                        }
+                    }
+                    if(mjesec.isEmpty()){
+                        System.out.println("Nema dana za taj mjesec.");
+                    }else{
+                        mjesec.save();
+                        System.out.println("Izvjestaj za "+mjesec.getMjesec()+" napravljen.");
+                    }
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
                     break;
                 }
                 case 4: {
-                    opcija = "GODINA";
+                    System.out.println("Unesite godinu.[yyyy]:");
+                    String regEx=cIn.nextLine();
+                    File mjeseci=new File("mjeseci");
+                    Godina godina=new Godina(regEx);
+                    File files[];
+                    for(File f:mjeseci.listFiles()){
+                        if(f.getName().contains(regEx)){
+                            Mjesec m=Mjesec.read(f.getPath());
+                            godina.add(m);
+                        }
+                    }
+                    if(godina.isEmpty()){
+                        System.out.println("Nema mjeseci za tu godinu.");
+                    }else{
+                        godina.save();
+                        System.out.println("Izvjestaj za "+godina.getGodina()+" napravljen.");
+                    }
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
                     break;
                 }
                 case 0: {
@@ -904,12 +1065,6 @@ public class SistemProdaje {
                     System.out.println("Nepostojeca opcija.");
                     cIn.nextLine();
             }
-        }
-        if (!end) {
-            System.out.println("Izvjestaj:");
-            String text = cIn.nextLine();
-            Izvjestaj izvjestaj = new Izvjestaj(kasir, text);
-            izvjestaj.save();
         }
     }
 
@@ -961,6 +1116,7 @@ public class SistemProdaje {
 
         if (!new File("lista_radnika.ser").exists()) {
             HashMap<String, String> hm = new HashMap();
+            hm.put("admin",sha256("1111"));
             saveRadnici(hm);
         }
         if (!new File("inventar.ser").exists()) {

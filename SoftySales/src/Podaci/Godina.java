@@ -37,10 +37,11 @@ public class Godina implements java.io.Serializable {
         return _sum;
     }
 
-    public Godina() {
-        DateFormat dateFormat = new SimpleDateFormat("MM");
-        Date date = new Date();
-        _godina = dateFormat.format(date);
+    public Godina(String godina) {
+//        DateFormat dateFormat = new SimpleDateFormat("MM");
+//        Date date = new Date();
+//        _godina = dateFormat.format(date);
+        _godina=godina;
         _sum = 0;
     }
 
@@ -101,5 +102,7 @@ public class Godina implements java.io.Serializable {
         System.out.println("TOTAL YEARLY SUM:" + godina._sum);
         System.out.println("==============");
     }
-
+    public boolean isEmpty(){
+        return _listaMjeseci.isEmpty();
+    }
 }

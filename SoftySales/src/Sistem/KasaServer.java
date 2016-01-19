@@ -185,15 +185,6 @@ public class KasaServer {
                     zahtjev = (HashMap<Proizvod, Integer>) in.readObject();
                     Racun racun = new Racun(getCashier(), name);
                     int temp=0;
-                    for(Proizvod p:zahtjev.keySet()){
-                        for(Proizvod pr:_inventar.keySet()){
-                            if(pr.getNaziv().equals(p.getNaziv())){
-                                temp=zahtjev.get(p);
-                                zahtjev.remove(p);
-                                zahtjev.put(pr, temp);
-                            }
-                        }
-                    }
                     for (Proizvod p : zahtjev.keySet()) {
                         racun.add(p, zahtjev.get(p));
                         temp=(_inventar.get(p)-zahtjev.get(p));
@@ -203,8 +194,8 @@ public class KasaServer {
                     SistemProdaje.saveInventar(_inventar);
                     _inventar=SistemProdaje.readInventar();
 //                  salje racun
-                KasaServer._listaZahtjeva.add(racun);
-                out.writeObject(racun);
+                    KasaServer._listaZahtjeva.add(racun);
+                    out.writeObject(racun);
                 }
                 out.close();
                 in.close();
