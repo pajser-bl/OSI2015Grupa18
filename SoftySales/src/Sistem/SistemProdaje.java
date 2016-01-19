@@ -164,7 +164,7 @@ public class SistemProdaje {
 
     }
 
-    public static HashMap<Proizvod, Integer> readInventar(){
+    public static HashMap<Proizvod, Integer> readInventar() {
         try {
             HashMap<Proizvod, Integer> inventar;
             FileInputStream fIn = new FileInputStream("inventar.ser");
@@ -173,6 +173,39 @@ public class SistemProdaje {
             oIn.close();
             fIn.close();
             return inventar;
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+//  serijalizacija statistike koristenja
+    public static void saveStatistikaKoristenja(String statistikaKoristenja) {
+        try {
+            FileOutputStream fOut = new FileOutputStream("statistika_koristenja.ser");
+            ObjectOutputStream oOut = new ObjectOutputStream(fOut);
+            oOut.writeObject(statistikaKoristenja);
+            oOut.close();
+            fOut.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static String readStatistikaKoristenja() {
+        try {
+            String statistikaKoristenja;
+            FileInputStream fIn = new FileInputStream("statistika_koristenja.ser");
+            ObjectInputStream oIn = new ObjectInputStream(fIn);
+            statistikaKoristenja = (String) oIn.readObject();
+            oIn.close();
+            fIn.close();
+            return statistikaKoristenja;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(SistemProdaje.class.getName()).log(Level.SEVERE, null, ex);
             return null;
@@ -343,9 +376,10 @@ public class SistemProdaje {
             System.out.println("Pregled statistike prodaje:");
             System.out.println("1. Pregled racuna.");
             System.out.println("2. Pregled prodaje.");
+            System.out.println("3. Pregled rada.");
             System.out.println("0. Nazad");
             System.out.println("-------------------");
-            System.out.printf("[1/2/0]: ");
+            System.out.printf("[1/2/3/0]: ");
 
             switch (Integer.parseInt(cIn.nextLine())) {
                 case 1: {
@@ -353,14 +387,15 @@ public class SistemProdaje {
                     while (!endPodmeni) {
                         cls();
                         System.out.println("-------------------");
-                        System.out.println("Pregled racuna:");
+                        System.out.println("Pregled racuna za:");
                         System.out.println("1. Dan.");
                         System.out.println("2. Sedmica.");
                         System.out.println("3. Mjesec.");
                         System.out.println("4. Godina.");
+                        System.out.println("5. Pojedinacnih racuna.");
                         System.out.println("0. Nazad");
                         System.out.println("-------------------");
-                        System.out.printf("[1/2/3/4/0]: ");
+                        System.out.printf("[1/2/3/4/5/0]: ");
 
                         switch (Integer.parseInt(cIn.nextLine())) {
                             case 1: {
@@ -373,7 +408,12 @@ public class SistemProdaje {
                                 }
                                 System.out.println("Za koji dan zelite da vidite racune?");
                                 danZaIspis = cIn.nextLine();
-                                Dan.read("dani" + File.separator + danZaIspis).print();
+                                cls();
+                                if (new File("dani" + File.separator + danZaIspis).exists()) {
+                                    Dan.read("dani" + File.separator + danZaIspis).print();
+                                } else {
+                                    System.out.println("Nepostojeci dan.");
+                                }
                                 System.out.println("Pritisnite ENTER da nastavite.");
                                 cIn.nextLine();
                                 break;
@@ -388,7 +428,12 @@ public class SistemProdaje {
                                 }
                                 System.out.println("Za koju sedmicu zelite da vidite racune?");
                                 sedmicaZaIspis = cIn.nextLine();
-                                Sedmica.read("sedmice" + File.separator + sedmicaZaIspis).print();
+                                cls();
+                                if (new File("sedmice" + File.separator + sedmicaZaIspis).exists()) {
+                                    Sedmica.read("sedmice" + File.separator + sedmicaZaIspis).print();
+                                } else {
+                                    System.out.println("Nepostojeca sedmica.");
+                                }
                                 System.out.println("Pritisnite ENTER da nastavite.");
                                 cIn.nextLine();
                                 break;
@@ -403,7 +448,12 @@ public class SistemProdaje {
                                 }
                                 System.out.println("Za koji mjesec zelite da vidite racune?");
                                 mjesecZaIspis = cIn.nextLine();
-                                Mjesec.read("mjeseci" + File.separator + mjesecZaIspis).print();
+                                cls();
+                                if (new File("mjeseci" + File.separator + mjesecZaIspis).exists()) {
+                                    Mjesec.read("mjeseci" + File.separator + mjesecZaIspis).print();
+                                } else {
+                                    System.out.println("Nepostojeci mjesec.");
+                                }
                                 System.out.println("Pritisnite ENTER da nastavite.");
                                 cIn.nextLine();
                                 break;
@@ -418,7 +468,32 @@ public class SistemProdaje {
                                 }
                                 System.out.println("Za koju godinu zelite da vidite racune?");
                                 godinaZaIspis = cIn.nextLine();
-                                Godina.read("godine" + File.separator + godinaZaIspis).print();
+                                cls();
+                                if (new File("godine" + File.separator + godinaZaIspis).exists()) {
+                                    Godina.read("godine" + File.separator + godinaZaIspis).print();
+                                } else {
+                                    System.out.println("Nepostojeca godina.");
+                                }
+                                System.out.println("Pritisnite ENTER da nastavite.");
+                                cIn.nextLine();
+                                break;
+                            }
+                            case 5: {
+                                File racuni = new File("racuni");
+                                File[] files = racuni.listFiles();
+                                String racunZaIspis;
+                                System.out.println("Racuni:");
+                                for (File f : files) {
+                                    System.out.println(f.getName());
+                                }
+                                System.out.println("Koji racun zelite da vidite?");
+                                racunZaIspis = cIn.nextLine();
+                                cls();
+                                if (new File("racuni" + File.separator + racunZaIspis).exists()) {
+                                    Racun.read("racuni" + File.separator + racunZaIspis).print();
+                                } else {
+                                    System.out.println("Nepostojeci racun.");
+                                }
                                 System.out.println("Pritisnite ENTER da nastavite.");
                                 cIn.nextLine();
                                 break;
@@ -460,8 +535,26 @@ public class SistemProdaje {
                             }
                             default:
                                 System.out.println("Nepostojeca opcija.");
+                                System.out.println("Pritisnite ENTER da nastavite.");
                                 cIn.nextLine();
                         }
+                    }
+                    break;
+                }
+                case 3: {
+                    String statistikaKoristenja = readStatistikaKoristenja();
+                    if (statistikaKoristenja.equals("")) {
+                        System.out.println("Statistika je prazna.");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
+                    } else {
+                        System.out.println("-------------------");
+                        System.out.println("Statistika koristenja: ");
+                        System.out.println("DATUM RADNIK POCETAK KRAJ");
+                        System.out.printf(statistikaKoristenja);
+                        System.out.println("-------------------");
+                        System.out.println("Pritisnite ENTER da nastavite.");
+                        cIn.nextLine();
                     }
                     break;
                 }
@@ -478,16 +571,9 @@ public class SistemProdaje {
     }
 
 //    radnik meni
-    public static void radnikMeni(String kasir, ArrayList<String> listaKupaca, ArrayList<Racun> listaZahtjeva, HashMap<Proizvod, Integer> inventar) {
+    public static void radnikMeni(String kasir, ArrayList<String> listaKupaca, ArrayList<Racun> listaZahtjeva, HashMap<Proizvod, Integer> inventar, String startTime) {
         Scanner cIn = new Scanner(System.in);
         boolean end = false;
-//        FORMAT VREMENA
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd.MM.yyyy");
-        Date date = new Date();
-
-//        podaci o vremenu
-        String pocetakRada = dateFormat.format(date);
-        String krajRada;
 
         while (!end) {
             cls();
@@ -509,7 +595,7 @@ public class SistemProdaje {
                         cIn.nextLine();
                     } else {
 //                        sistem kupovine
-                        for(int i=0;i<listaZahtjeva.size();i++){
+                        for (int i = 0; i < listaZahtjeva.size(); i++) {
                             listaZahtjeva.get(i).finish();
                             listaZahtjeva.get(i).print();
                             listaZahtjeva.remove(i);
@@ -530,6 +616,7 @@ public class SistemProdaje {
                     break;
                 }
                 case 0: {
+                    addStatistikaKoristenja(kasir, startTime);
                     end = true;
                     break;
                 }
@@ -655,7 +742,7 @@ public class SistemProdaje {
         boolean end = false;
         while (!end) {
             cls();
-            inventar=readInventar();
+            inventar = readInventar();
             System.out.println("-------------------");
             System.out.println("1. Prikaz proizvoda.");
             System.out.println("2. Dodavanje novih proizvoda.");
@@ -716,8 +803,9 @@ public class SistemProdaje {
                         String ime = cIn.nextLine();
                         Proizvod proizvod = null;
                         for (Proizvod p : inventar.keySet()) {
-                            if (p.getNaziv().equals(ime))
+                            if (p.getNaziv().equals(ime)) {
                                 proizvod = p;
+                            }
                         }
                         if (inventar.containsKey(proizvod)) {
                             System.out.printf("Novo stanje proizvoda: ");
@@ -752,8 +840,9 @@ public class SistemProdaje {
                         String ime = cIn.nextLine();
                         Proizvod proizvod = null;
                         for (Proizvod p : inventar.keySet()) {
-                            if (p.getNaziv().equals(ime))
+                            if (p.getNaziv().equals(ime)) {
                                 proizvod = p;
+                            }
                         }
                         if (inventar.containsKey(proizvod)) {
                             inventar.remove(proizvod);
@@ -768,7 +857,7 @@ public class SistemProdaje {
                     break;
                 }
                 case 0: {
-                    end=true;
+                    end = true;
                     break;
                 }
                 default:
@@ -878,6 +967,32 @@ public class SistemProdaje {
             HashMap<Proizvod, Integer> hm = new HashMap();
             saveInventar(hm);
         }
+        if (!new File("statistika_koristenja.ser").exists()) {
+            String s = "";
+            saveStatistikaKoristenja(s);
+        }
     }
 
+    public static String time() {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        String time = dateFormat.format(date);
+        return time;
+    }
+
+    public static String date() {
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Date date = new Date();
+        String datum = dateFormat.format(date);
+        return datum;
+    }
+
+    public static void addStatistikaKoristenja(String cashier, String sTime) {
+        String datum = date();
+        String eTime = time();
+        String statistikaKoristenja = readStatistikaKoristenja();
+        String toAdd = "[ " + datum + " ] " + cashier + ": < " + sTime + " | " + eTime + " >\n";
+        String ss = statistikaKoristenja + toAdd;
+        saveStatistikaKoristenja(ss);
+    }
 }

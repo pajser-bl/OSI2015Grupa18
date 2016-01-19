@@ -14,7 +14,10 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -27,9 +30,10 @@ import java.util.logging.Logger;
 public class KasaServer {
 
     private static String _cashier;
-
+    private String _startTime;
     private Scanner cIn;
 //    podaci o radnicima i administratoru
+    private static String _statistikaKoristenja;
     private static HashMap<String, String> _listaRadnika;
     private static HashMap<Proizvod, Integer> _inventar;
     private static ArrayList<String> _listaKupaca;
@@ -47,9 +51,10 @@ public class KasaServer {
 
         _listaKupaca = SistemProdaje.readKupci();
         _listaRadnika = SistemProdaje.readRadnici();
+        _statistikaKoristenja=SistemProdaje.readStatistikaKoristenja();
         _inventar = SistemProdaje.readInventar();
         _listaZahtjeva = new ArrayList();
-
+        
 //      inicijalizacija threda
         KasaThread kasaThread = new KasaThread();
         kasaThread.start();
@@ -88,7 +93,9 @@ public class KasaServer {
         if (adminCheck) {
             SistemProdaje.adminMeni(_listaRadnika);
         } else {
-            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva, _inventar);
+            _startTime=SistemProdaje.time();
+            SistemProdaje.radnikMeni(_cashier, _listaKupaca, _listaZahtjeva, _inventar,_startTime);
+            
         }
     }
 
