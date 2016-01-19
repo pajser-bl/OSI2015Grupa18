@@ -45,7 +45,8 @@ public class Statistika implements java.io.Serializable {
 
     public void addStatistika(Statistika statistika) {
         for (Proizvod i : statistika._listaProizvoda.keySet()) {
-            this.add(i, statistika._listaProizvoda.get(i));
+            Integer kol=statistika._listaProizvoda.get(i);
+            this.add(i, kol);
         }
     }
 }

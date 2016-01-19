@@ -51,6 +51,7 @@ public class Sedmica implements java.io.Serializable {
     public Sedmica() {
         this._listaDana = new ArrayList<Dan>();
         this._sum = 0;
+        this.statistika=new Statistika();
     }
 
     public void save() {

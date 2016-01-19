@@ -2,23 +2,13 @@ package Sistem;
 
 import Podaci.Proizvod;
 import Podaci.Racun;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.Console;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -191,7 +181,7 @@ public class KasaServer {
                     out.writeObject("accepted");
                     zahtjev = (HashMap<Proizvod, Integer>) in.readObject();
                     Racun racun = new Racun(getCashier(), name);
-                    int temp=0;
+                    int temp;
                     for (Proizvod p : zahtjev.keySet()) {
                         racun.add(p, zahtjev.get(p));
                         temp=(_inventar.get(p)-zahtjev.get(p));

@@ -2,7 +2,6 @@ package Sistem;
 
 import Podaci.Dan;
 import Podaci.Godina;
-import Podaci.Izvjestaj;
 import Podaci.Mjesec;
 import Podaci.Proizvod;
 import Podaci.Racun;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -947,7 +945,6 @@ public class SistemProdaje {
                     String regEx=cIn.nextLine();
                     File racuni=new File("racuni");
                     Dan dan=new Dan();
-                    File files[];
                     for(File f:racuni.listFiles()){
                         if(f.getName().contains(regEx)){
                         Racun r=Racun.read(f.getPath());
@@ -966,57 +963,68 @@ public class SistemProdaje {
                 }
                 case 2: {
                     try {
-                        System.out.println("Unesite prvi dan sedmice.[dd.MM.yyyy]:");
+                        System.out.println("Unesite prvi dan sedmice.[dd.MM.yyyy-dd.MM.yyyy]:");
                         String regEx=cIn.nextLine();
                         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                        Date date=dateFormat.parse(regEx);
-
-                        String date0,date1,date2,date3,date4,date5,date6;
-                        date0 = regEx;
-                        date1 = dateFormat.format(new Date(date.getTime()+8640000));
-                        date2 = dateFormat.format(new Date(date.getTime()+2*8640000));
-                        date3 = dateFormat.format(new Date(date.getTime()+3*8640000));
-                        date4 = dateFormat.format(new Date(date.getTime()+4*8640000));
-                        date5 = dateFormat.format(new Date(date.getTime()+5*8640000));
-                        date6 = dateFormat.format(new Date(date.getTime()+6*8640000));
+                        Date date0=dateFormat.parse(regEx);
+                        Date date1=new Date(date0.getTime()+86400000);
+                        Date date2=new Date(date1.getTime()+86400000);
+                        Date date3=new Date(date2.getTime()+86400000);
+                        Date date4=new Date(date3.getTime()+86400000);
+                        Date date5=new Date(date4.getTime()+86400000);
+                        Date date6=new Date(date5.getTime()+86400000);
+                        String datum0=dateFormat.format(date0);
+                        String datum1=dateFormat.format(date1);
+                        String datum2=dateFormat.format(date2);
+                        String datum3=dateFormat.format(date3);
+                        String datum4=dateFormat.format(date4);
+                        String datum5=dateFormat.format(date5);
+                        String datum6=dateFormat.format(date6);
                         
                         File dani=new File("dani");
                         Sedmica sedmica=new Sedmica();
-                        File files[];
                         for(File f:dani.listFiles()){
-                            if(f.getName().contains(date0)){
+                            if(f.getName().contains(datum0)){
                                 Dan d=Dan.read(f.getPath());
-                                sedmica.add(d);
+                                if(!d.isEmpty())
+                                    sedmica.add(d);
                             }
-                            if(f.getName().contains(date1)){
+                            if(f.getName().contains(datum1)){
                                 Dan d=Dan.read(f.getPath());
-                                sedmica.add(d);
+                                    if(!d.isEmpty())
+                                        sedmica.add(d);
                             }
-                            if(f.getName().contains(date2)){
-                            Dan d=Dan.read(f.getPath());
-                                sedmica.add(d);
+                            if(f.getName().contains(datum2)){
+                                Dan d=Dan.read(f.getPath());
+                                if(!d.isEmpty())
+                                    sedmica.add(d);
                             }
-                            if(f.getName().contains(date3)){
+                            if(f.getName().contains(datum3)){
                                 Dan d=Dan.read(f.getPath());
-                                sedmica.add(d);
+                                if(!d.isEmpty())
+                                    sedmica.add(d);
                             }
-                            if(f.getName().contains(date4)){
+                            if(f.getName().contains(datum4)){
                                 Dan d=Dan.read(f.getPath());
-                                sedmica.add(d);
+                                if(!d.isEmpty())
+                                    sedmica.add(d);
                             }
-                            if(f.getName().contains(date5)){
+                            if(f.getName().contains(datum5)){
                                 Dan d=Dan.read(f.getPath());
-                                sedmica.add(d);}
-                            if(f.getName().contains(date6)){
+                                if(!d.isEmpty())
+                                    sedmica.add(d);
+                            }
+                            if(f.getName().contains(datum6)){
                                 Dan d=Dan.read(f.getPath());
-                                sedmica.add(d);
+                                if(!d.isEmpty())
+                                    sedmica.add(d);
                             }
                         }
                         if(sedmica.isEmpty()){
                             System.out.println("Nema dana za tu sedmicu.");
                         }else{
-                            sedmica.setStartDate(date0);
-                            sedmica.setEndDate(date6);
+                            sedmica.setStartDate(datum0);
+                            sedmica.setEndDate(datum6);
                             sedmica.save();
                             System.out.println("Izvjestaj za "+sedmica.getStartDate()+"-"+sedmica.getEndDate()+" napravljen.");
                         }   
@@ -1029,24 +1037,18 @@ public class SistemProdaje {
                 break;
                 }
                 case 3: {
-                    System.out.println("Unesite broj mjeseca i godinu.[MM.yyyy]:");
-                    String regEx=cIn.nextLine();
+                    System.out.println("Unesite broj mjeseca.[MM]:");
+                    String MM=cIn.nextLine();
+                    System.out.println("Unesite godinu.[yyyy]:");
+                    String yyyy=cIn.nextLine();
                     File dani=new File("dani");
-                    String s[]=regEx.split(".");
-                    if(s.length!=2){
-                        System.out.println("Nema dana za taj mjesec.");
-                        System.out.println("Pritisnite ENTER da nastavite.");
-                        cIn.nextLine();
-                        break;
-                    }
-                    int brMjesec=Integer.parseInt(s[0]);
-                    String godina=s[1];
-                    Mjesec mjesec=new Mjesec(brMjesec,godina);
-                    File files[];
+                    int brMjesec=Integer.parseInt(MM);
+                    Mjesec mjesec=new Mjesec(brMjesec,yyyy);
                     for(File f:dani.listFiles()){
-                        if(f.getName().contains(regEx)){
+                        if(f.getName().contains(MM+"."+yyyy)){
                             Dan d=Dan.read(f.getPath());
-                            mjesec.add(d);
+                            if(!d.isEmpty())
+                                mjesec.add(d);
                         }
                     }
                     if(mjesec.isEmpty()){
@@ -1064,11 +1066,11 @@ public class SistemProdaje {
                     String regEx=cIn.nextLine();
                     File mjeseci=new File("mjeseci");
                     Godina godina=new Godina(regEx);
-                    File files[];
                     for(File f:mjeseci.listFiles()){
                         if(f.getName().contains(regEx)){
                             Mjesec m=Mjesec.read(f.getPath());
-                            godina.add(m);
+                            if(!m.isEmpty())
+                                godina.add(m);
                         }
                     }
                     if(godina.isEmpty()){

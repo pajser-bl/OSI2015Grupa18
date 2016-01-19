@@ -42,6 +42,8 @@ public class Godina implements java.io.Serializable {
 //        Date date = new Date();
 //        _godina = dateFormat.format(date);
         _godina=godina;
+        statistika=new Statistika();
+        _listaMjeseci=new ArrayList<>();
         _sum = 0;
     }
 

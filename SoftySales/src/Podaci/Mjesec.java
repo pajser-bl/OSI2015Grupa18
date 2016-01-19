@@ -84,11 +84,13 @@ public class Mjesec implements java.io.Serializable {
         }
         this._listaDana = new ArrayList<Dan>();
         this._sum = 0;
+        this.statistika=new Statistika();
     }
 
     public void add(Dan dan) {
         _listaDana.add(dan);
-        _sum += dan.getSum();
+        Double t=dan.getSum();
+        _sum += t;
         statistika.addStatistika(dan.statistika);
     }
 
