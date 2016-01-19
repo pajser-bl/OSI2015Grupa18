@@ -22,11 +22,23 @@ public class Statistika implements java.io.Serializable {
     public void print() {
         _listaProizvoda.keySet().stream().forEach((i) -> {
             String proizvod = i.getNaziv();
-            String kolicina = _listaProizvoda.get(i).toString();
-            System.out.println(proizvod + " x" + kolicina);
+            int kolicina = _listaProizvoda.get(i);
+            double sum=i.getCijena()*kolicina;
+            i.print();
+            System.out.printf(" x" + kolicina+"Sum: "+sum+"\n");
         });
     }
-
+    public boolean printSingle(String naziv){
+        boolean rVal=false;
+        for(Proizvod p:_listaProizvoda.keySet()){
+            if(p.getNaziv().equals(naziv)){
+                double sum=_listaProizvoda.get(p)*p.getCijena();
+                System.out.println(p.getSifra()+" "+p.getNaziv()+" x"+_listaProizvoda.get(p)+" SUM: "+sum+"\n");
+                rVal=true;
+            }
+        }
+        return rVal;
+    }
     public int getCoeficient(Proizvod proizvod) {
         return (Integer) _listaProizvoda.get(proizvod);
     }

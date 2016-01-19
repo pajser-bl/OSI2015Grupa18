@@ -141,8 +141,6 @@ public class KupacKlijent extends Thread {
                 case 1:{
                     if (inventar.isEmpty()) {
                         System.out.println("Inventar je prazan.");
-                        System.out.println("Pritisnite ENTER da nastavite.");
-                        cIn.nextLine();
                     } else {
                         System.out.println("-------------------");
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
@@ -150,17 +148,14 @@ public class KupacKlijent extends Thread {
                             p.print();
                             System.out.printf(" x" + inventar.get(p) + "\n");
                         }
-                        System.out.println("-------------------");
-                        System.out.println("Pritisnite ENTER da nastavite.");
-                        cIn.nextLine();
-                    break;
                     }
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
+                    break;
                 }
                 case 2:{
                     if (korpa.isEmpty()) {
                         System.out.println("Korpa je prazna.");
-                        System.out.println("Pritisnite ENTER da nastavite.");
-                        cIn.nextLine();
                     } else {
                         double sum=0;
                         System.out.println("-------------------");
@@ -171,11 +166,10 @@ public class KupacKlijent extends Thread {
                             System.out.printf(" x" + korpa.get(p) + "\n");
                         }
                         System.out.println("-------------------");
-                        System.out.println("Ukupna cijena: "+sum);
-                        System.out.println("Pritisnite ENTER da nastavite.");
-                        cIn.nextLine();
                     }
-                break;
+                    System.out.println("Pritisnite ENTER da nastavite.");
+                    cIn.nextLine();
+                    break;
                 }
                 case 3:{
                     if (inventar.isEmpty()) {

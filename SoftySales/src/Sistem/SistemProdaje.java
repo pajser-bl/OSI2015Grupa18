@@ -519,7 +519,7 @@ public class SistemProdaje {
                         System.out.println("2. Mjesec.");
                         System.out.println("3. Mjesec.");
                         System.out.println("4. Godina.");
-                        System.out.println("0.");
+                        System.out.println("0. Nazad");
                         System.out.println("-------------------");
                         System.out.printf("[1/2/3/4/0]: ");
                         switch (Integer.parseInt(cIn.nextLine())) {
@@ -530,31 +530,53 @@ public class SistemProdaje {
                                     System.out.println("-------------------");
                                     System.out.println("1. Pregled pojedinacne statistike:");
                                     System.out.println("2. Pregled uopstene statistike:");
+                                    System.out.println("0. Nazad");
                                     System.out.println("-------------------");
                                     System.out.printf("[1/2/0]: ");
                                     switch(Integer.parseInt(cIn.nextLine())){
                                         case 1:{
-                                            cls();
-                                            File dani=new File("dani");
-                                            File files[]=dani.listFiles();
-                                            System.out.println("Statistika za dan:[dd.MM.yyyy]");
-                                            String regEx=cIn.nextLine();
-                                            Dan dan=new Dan();
-                                            System.out.printf("Ime trazenog proizvoda: ");
-                                            String proizvod=cIn.nextLine();
-                                            for(File f:files){
-                                                if(f.getName().contains(regEx))
-                                                    dan=Dan.read(f.getPath());
-                                                    for(Proizvod p:dan.statistika._listaProizvoda.keySet()){
-                                                        if(p.getNaziv().equals(proizvod))
-                                                            System.out.println("x"+dan.statistika.getCoeficient(p));
-                                                            System.out.println("Sum:"+dan.statistika._listaProizvoda.get(p)*p.getCijena());
-                                                        }
+                                            File dani = new File("dani");
+                                            File[] files = dani.listFiles();
+                                            String danZaIspis;
+                                            System.out.println("Racuni:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
                                             }
-                                            break;
+                                            System.out.println("Za koji dan zelite da vidite statistiku?");
+                                            danZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("dani" + File.separator + danZaIspis).exists()) {
+                                                System.out.println("Za koji proizvod zelite da vidite statistiku[NAZIV]?");
+                                                String nazivProizvoda=cIn.nextLine();
+                                                System.out.println("");
+                                                if(!Dan.read("dani" + File.separator + danZaIspis).statistika.printSingle(nazivProizvoda))
+                                                    System.out.println("Nema tog proizvoda.");
+                                            } else {
+                                                System.out.println("Nepostojeci dan.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
                                         }
                                         case 2:{
-                                            break;
+                                            File dani = new File("dani");
+                                            File[] files = dani.listFiles();
+                                            String danZaIspis;
+                                            System.out.println("Racuni:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
+                                            }
+                                            System.out.println("Za koji dan zelite da vidite statistiku?");
+                                            danZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("dani" + File.separator + danZaIspis).exists()) {
+                                                Dan.read("dani" + File.separator + danZaIspis).statistika.print();
+                                            } else {
+                                                System.out.println("Nepostojeci dan.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
                                         }
                                         case 0:{
                                             endPodmeniPodmeni=true;
@@ -638,6 +660,8 @@ public class SistemProdaje {
                             listaZahtjeva.get(i).finish();
                             listaZahtjeva.get(i).print();
                             listaZahtjeva.remove(i);
+                            System.out.println("Pritisnite ENTER da nastavite.");
+                            cIn.nextLine();
                         }
                     }
                     break;
@@ -707,7 +731,7 @@ public class SistemProdaje {
                     } else {
                         listaKupaca.add(ime);
                         saveKupci(listaKupaca);
-                        System.out.println("Kupac " + ime + " uspjesno dodan.");
+                        System.out.println("Kupac " + ime + " uspjesno dodan.\nNalog ce biti aktiviran u sledecoj sesiji.");
                         System.out.println("Pritisnite ENTER da nastavite.");
                         cIn.nextLine();
                     }
