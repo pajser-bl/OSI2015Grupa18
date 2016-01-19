@@ -7,10 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +16,7 @@ public class Godina implements java.io.Serializable {
     private String _godina;
     private double _sum;
     private ArrayList<Mjesec> _listaMjeseci;
-    protected Statistika statistika;
+    public Statistika statistika;
 
     public void setGodina(String _godina) {
         this._godina = _godina;
@@ -38,9 +35,6 @@ public class Godina implements java.io.Serializable {
     }
 
     public Godina(String godina) {
-//        DateFormat dateFormat = new SimpleDateFormat("MM");
-//        Date date = new Date();
-//        _godina = dateFormat.format(date);
         _godina=godina;
         statistika=new Statistika();
         _listaMjeseci=new ArrayList<>();

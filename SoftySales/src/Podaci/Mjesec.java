@@ -7,10 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +16,7 @@ public class Mjesec implements java.io.Serializable {
     private String _mjesec;
     private double _sum;
     private ArrayList<Dan> _listaDana;
-    protected Statistika statistika;
+    public Statistika statistika;
 
 //  Getteri
     public String getMjesec() {
@@ -40,9 +37,6 @@ public class Mjesec implements java.io.Serializable {
     }
 
     public Mjesec(int brojMjeseca,String godina) {
-//        DateFormat dateFormat = new SimpleDateFormat("MM");
-//        Date date = new Date();
-//        Integer temp = Integer.valueOf(dateFormat.format(date));
         this._godina=godina;
         switch (brojMjeseca) {
             case 1:

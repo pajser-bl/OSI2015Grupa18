@@ -7,10 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,7 +17,7 @@ public class Sedmica implements java.io.Serializable {
     private String _endDate;
     private double _sum;
     private ArrayList<Dan> _listaDana;
-    protected Statistika statistika;
+    public Statistika statistika;
 
 //    Getteri
     public String getStartDate() {
@@ -55,12 +52,6 @@ public class Sedmica implements java.io.Serializable {
     }
 
     public void save() {
-//        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-//        Date startDate = new Date();
-//        Date endDate = new Date();
-//        startDate.setTime(endDate.getTime() - 604800000);//minus 7 dana.
-//        _startDate = dateFormat.format(startDate);
-//        _endDate = dateFormat.format(endDate);
         try {
             FileOutputStream fOut = new FileOutputStream("sedmice" + File.separator + "S-" + _startDate + "-" + _endDate + ".ser");
             ObjectOutputStream oOut = new ObjectOutputStream(fOut);

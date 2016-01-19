@@ -514,9 +514,9 @@ public class SistemProdaje {
                         System.out.println("-------------------");
                         System.out.println("Pregled statistike za:");
                         System.out.println("1. Dan.");
-                        System.out.println("2. Mjesec.");
+                        System.out.println("2. Sedmicu.");
                         System.out.println("3. Mjesec.");
-                        System.out.println("4. Godina.");
+                        System.out.println("4. Godinu.");
                         System.out.println("0. Nazad");
                         System.out.println("-------------------");
                         System.out.printf("[1/2/3/4/0]: ");
@@ -536,7 +536,7 @@ public class SistemProdaje {
                                             File dani = new File("dani");
                                             File[] files = dani.listFiles();
                                             String danZaIspis;
-                                            System.out.println("Racuni:");
+                                            System.out.println("Dani:");
                                             for (File f : files) {
                                                 System.out.println(f.getName());
                                             }
@@ -560,7 +560,7 @@ public class SistemProdaje {
                                             File dani = new File("dani");
                                             File[] files = dani.listFiles();
                                             String danZaIspis;
-                                            System.out.println("Racuni:");
+                                            System.out.println("Dani:");
                                             for (File f : files) {
                                                 System.out.println(f.getName());
                                             }
@@ -586,6 +586,195 @@ public class SistemProdaje {
                                 break;
                             }
                             case 2: {
+                                boolean endPodmeniPodmeni=false;
+                                while(!endPodmeniPodmeni){
+                                    cls();
+                                    System.out.println("-------------------");
+                                    System.out.println("1. Pregled pojedinacne statistike:");
+                                    System.out.println("2. Pregled uopstene statistike:");
+                                    System.out.println("0. Nazad");
+                                    System.out.println("-------------------");
+                                    System.out.printf("[1/2/0]: ");
+                                    switch(Integer.parseInt(cIn.nextLine())){
+                                        case 1:{
+                                            File sedmice = new File("sedmice");
+                                            File[] files = sedmice.listFiles();
+                                            String sedmicaZaIspis;
+                                            System.out.println("Sedmice:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
+                                            }
+                                            System.out.println("Za koju sedmicu zelite da vidite statistiku?");
+                                            sedmicaZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("sedmice" + File.separator + sedmicaZaIspis).exists()) {
+                                                System.out.println("Za koji proizvod zelite da vidite statistiku[NAZIV]?");
+                                                String nazivProizvoda=cIn.nextLine();
+                                                System.out.println("");
+                                                if(!Sedmica.read("sedmice" + File.separator + sedmicaZaIspis).statistika.printSingle(nazivProizvoda))
+                                                    System.out.println("Nema tog proizvoda.");
+                                            } else {
+                                                System.out.println("Nepostojeca sedmica.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
+                                        }
+                                        case 2:{
+                                            File sedmice = new File("sedmice");
+                                            File[] files = sedmice.listFiles();
+                                            String sedmicaZaIspis;
+                                            System.out.println("Sedmice:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
+                                            }
+                                            System.out.println("Za koju sedmicu zelite da vidite statistiku?");
+                                            sedmicaZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("sedmice" + File.separator + sedmicaZaIspis).exists()) {
+                                                Sedmica.read("sedmice" + File.separator + sedmicaZaIspis).statistika.print();
+                                            } else {
+                                                System.out.println("Nepostojeca sedmica.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
+                                        }
+                                        case 0:{
+                                            endPodmeniPodmeni=true;
+                                            break;
+                                        }
+                                        default:
+                                    }
+                                }
+                                break;
+                            }
+                            case 3:{
+                                boolean endPodmeniPodmeni=false;
+                                while(!endPodmeniPodmeni){
+                                    cls();
+                                    System.out.println("-------------------");
+                                    System.out.println("1. Pregled pojedinacne statistike:");
+                                    System.out.println("2. Pregled uopstene statistike:");
+                                    System.out.println("0. Nazad");
+                                    System.out.println("-------------------");
+                                    System.out.printf("[1/2/0]: ");
+                                    switch(Integer.parseInt(cIn.nextLine())){
+                                        case 1:{
+                                            File mjeseci = new File("mjeseci");
+                                            File[] files = mjeseci.listFiles();
+                                            String mjesecZaIspis;
+                                            System.out.println("Mjeseci:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
+                                            }
+                                            System.out.println("Za koji mjesec zelite da vidite statistiku?");
+                                            mjesecZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("mjeseci" + File.separator + mjesecZaIspis).exists()) {
+                                                System.out.println("Za koji proizvod zelite da vidite statistiku[NAZIV]?");
+                                                String nazivProizvoda=cIn.nextLine();
+                                                System.out.println("");
+                                                if(!Mjesec.read("mjeseci" + File.separator + mjesecZaIspis).statistika.printSingle(nazivProizvoda))
+                                                    System.out.println("Nema tog proizvoda.");
+                                            } else {
+                                                System.out.println("Nepostojeci mjesec.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
+                                        }
+                                        case 2:{
+                                            File mjeseci = new File("mjeseci");
+                                            File[] files = mjeseci.listFiles();
+                                            String mjesecZaIspis;
+                                            System.out.println("Mjeseci:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
+                                            }
+                                            System.out.println("Za koji mjesec zelite da vidite statistiku?");
+                                            mjesecZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("mjeseci" + File.separator + mjesecZaIspis).exists()) {
+                                                Mjesec.read("mjeseci" + File.separator + mjesecZaIspis).statistika.print();
+                                            } else {
+                                                System.out.println("Nepostojeci mjesec.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
+                                        }
+                                        case 0:{
+                                            endPodmeniPodmeni=true;
+                                            break;
+                                        }
+                                        default:
+                                    }
+                                }
+                                break;
+                            }
+                            case 4:{
+                                boolean endPodmeniPodmeni=false;
+                                while(!endPodmeniPodmeni){
+                                    cls();
+                                    System.out.println("-------------------");
+                                    System.out.println("1. Pregled pojedinacne statistike:");
+                                    System.out.println("2. Pregled uopstene statistike:");
+                                    System.out.println("0. Nazad");
+                                    System.out.println("-------------------");
+                                    System.out.printf("[1/2/0]: ");
+                                    switch(Integer.parseInt(cIn.nextLine())){
+                                        case 1:{
+                                            File godine = new File("godine");
+                                            File[] files = godine.listFiles();
+                                            String godinaZaIspis;
+                                            System.out.println("Godine:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
+                                            }
+                                            System.out.println("Za koju godinu zelite da vidite statistiku?");
+                                            godinaZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("godine" + File.separator + godinaZaIspis).exists()) {
+                                                System.out.println("Za koji proizvod zelite da vidite statistiku[NAZIV]?");
+                                                String nazivProizvoda=cIn.nextLine();
+                                                System.out.println("");
+                                                if(!Godina.read("godine" + File.separator + godinaZaIspis).statistika.printSingle(nazivProizvoda))
+                                                    System.out.println("Nema tog proizvoda.");
+                                            } else {
+                                                System.out.println("Nepostojeca godina.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
+                                        }
+                                        case 2:{
+                                            File godine = new File("godine");
+                                            File[] files = godine.listFiles();
+                                            String godinaZaIspis;
+                                            System.out.println("Godine:");
+                                            for (File f : files) {
+                                                System.out.println(f.getName());
+                                            }
+                                            System.out.println("Za koju godinu zelite da vidite statistiku?");
+                                            godinaZaIspis = cIn.nextLine();
+                                            cls();
+                                            if (new File("godine" + File.separator + godinaZaIspis).exists()) {
+                                                Godina.read("godine" + File.separator + godinaZaIspis).statistika.print();
+                                            } else {
+                                                System.out.println("Nepostojeca godina.");
+                                            }
+                                            System.out.println("Pritisnite ENTER da nastavite.");
+                                            cIn.nextLine();
+                                        break;
+                                        }
+                                        case 0:{
+                                            endPodmeniPodmeni=true;
+                                            break;
+                                        }
+                                        default:
+                                    }
+                                }
                                 break;
                             }
                             case 0: {
@@ -1130,11 +1319,7 @@ public class SistemProdaje {
             f = new File("godine");
             f.mkdir();
         }
-        if (!IZVJESTAJI.exists() || !IZVJESTAJI.isDirectory()) {
-            f = new File("izvjestaji");
-            f.mkdir();
-        }
-
+        
         if (!new File("lista_kupaca.ser").exists()) {
             ArrayList<String> list = new ArrayList();
             saveKupci(list);

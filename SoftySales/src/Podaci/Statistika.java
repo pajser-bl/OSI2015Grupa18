@@ -40,7 +40,7 @@ public class Statistika implements java.io.Serializable {
         return rVal;
     }
     public int getCoeficient(Proizvod proizvod) {
-        return (Integer) _listaProizvoda.get(proizvod);
+        return _listaProizvoda.get(proizvod);
     }
 
     public void addStatistika(Statistika statistika) {
