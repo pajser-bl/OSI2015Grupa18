@@ -4,7 +4,7 @@
 
 - [Pavle Vignjević](https://github.com/pajser-bl)
 - [Ognjen Vidović](https://github.com/geewid)
-- [Milan Tubić](http://memegenerator.net/instance/54563824)
+- [Milan Tubić](http://cdn.meme.am/instances/500x/54563824.jpg)
 - [Miloš Danilović](https://github.com/wolfskrieg)
 - [Milenko Petković](https://github.com/milpet)
 
