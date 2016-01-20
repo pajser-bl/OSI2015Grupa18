@@ -141,7 +141,7 @@ public class KupacKlijent extends Thread {
             System.out.println("5. Finisiranje narudzbe.");
             System.out.println("0. Izlaz.");
             System.out.println("-------------------");
-            System.out.printf("[1/2/3/4/0]: ");
+            System.out.printf("[1/2/3/4/5/0]: ");
             switch (SistemProdaje.optionChooser(cIn.nextLine())) {
                 case 1: {
                     if (inventar.isEmpty()) {
@@ -151,7 +151,7 @@ public class KupacKlijent extends Thread {
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
                         for (Proizvod p : inventar.keySet()) {
                             p.print();
-                            System.out.printf(" x" + inventar.get(p) + "\n");
+                            System.out.printf(" x%d\n",inventar.get(p));
                         }
                     }
                     System.out.println("Pritisnite ENTER da nastavite.");
@@ -168,7 +168,7 @@ public class KupacKlijent extends Thread {
                         for (Proizvod p : korpa.keySet()) {
                             p.print();
                             sum += p.getCijena() * korpa.get(p);
-                            System.out.printf(" x" + korpa.get(p) + "\n");
+                            System.out.printf(" x%d\n", korpa.get(p));
                         }
                         System.out.println("-------------------");
                     }
@@ -186,7 +186,7 @@ public class KupacKlijent extends Thread {
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
                         for (Proizvod p : inventar.keySet()) {
                             p.print();
-                            System.out.printf(" x" + inventar.get(p) + "\n");
+                            System.out.printf(" x%d\n",inventar.get(p));
                         }
                         System.out.println("-------------------");
                         System.out.println("Zeljeni proizvod:[NAZIV]: ");
@@ -227,7 +227,7 @@ public class KupacKlijent extends Thread {
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
                         for (Proizvod p : korpa.keySet()) {
                             p.print();
-                            System.out.printf(" x" + korpa.get(p) + "\n");
+                            System.out.printf(" x%d\n",korpa.get(p));
                         }
                         System.out.println("-------------------");
                         System.out.println("Proizvod za uklanjanje:[NAZIV]: ");
