@@ -61,7 +61,7 @@ public class KupacKlijent extends Thread {
     public void logInCheck() {
         try {
             while (!logInCheck) {
-                System.out.printf("Da li ste privilegovani kupac?[Da/Ne]:");
+                System.out.printf("Da li ste privilegovani kupac? [Da/Ne]: ");
                 String option = cIn.nextLine();
                 if (option.toLowerCase().equals("da")) {
                     while (!logOnCheck) {
