@@ -123,7 +123,7 @@ public class Racun implements java.io.Serializable {
         for (Proizvod i : _lista.keySet()) {
             String kolicina = _lista.get(i).toString();
             i.print();
-            System.out.printf(" x%s\n",kolicina);
+            System.out.printf(" x%s\n", kolicina);
         }
         System.out.printf("SUM:%.2fKM\n", _sum);
         System.out.println("--------------");

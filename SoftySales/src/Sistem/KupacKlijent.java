@@ -2,14 +2,9 @@ package Sistem;
 
 import Podaci.Proizvod;
 import Podaci.Racun;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -151,7 +146,7 @@ public class KupacKlijent extends Thread {
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
                         for (Proizvod p : inventar.keySet()) {
                             p.print();
-                            System.out.printf(" x%d\n",inventar.get(p));
+                            System.out.printf(" x%d\n", inventar.get(p));
                         }
                     }
                     System.out.println("Pritisnite ENTER da nastavite.");
@@ -186,7 +181,7 @@ public class KupacKlijent extends Thread {
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
                         for (Proizvod p : inventar.keySet()) {
                             p.print();
-                            System.out.printf(" x%d\n",inventar.get(p));
+                            System.out.printf(" x%d\n", inventar.get(p));
                         }
                         System.out.println("-------------------");
                         System.out.println("Zeljeni proizvod:[NAZIV]: ");
@@ -227,7 +222,7 @@ public class KupacKlijent extends Thread {
                         System.out.println("SIFRA  NAZIV CIJENA KOLICINA");
                         for (Proizvod p : korpa.keySet()) {
                             p.print();
-                            System.out.printf(" x%d\n",korpa.get(p));
+                            System.out.printf(" x%d\n", korpa.get(p));
                         }
                         System.out.println("-------------------");
                         System.out.println("Proizvod za uklanjanje:[NAZIV]: ");
