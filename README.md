@@ -9,3 +9,15 @@
 - [Milenko Petković](https://github.com/milpet)
 
 ![](http://i.stack.imgur.com/rfBgZ.png)
+
+## Uputstvo za pokretanje
+
+### Server
+```
+java -jar SoftySalesServer.jar
+```
+
+### Klijent
+```
+java -jar SoftySalesKlijent.jar
+```
